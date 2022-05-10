@@ -8,8 +8,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -40,7 +38,12 @@ public class LocalControllerTest {
         // given
         String paramAddress = "남양주시";
         String url = "http://localhost:" + port + "/api/local/get-address/" + paramAddress;
+
+        // when
         String result = restTemplate.getForObject(url, String.class).toString();
-        System.out.println(result);
+//        System.out.println(result);
+
+        // then
+        assertThat(result).contains("success", paramAddress);
     }
 }
