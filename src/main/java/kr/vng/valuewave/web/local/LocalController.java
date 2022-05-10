@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * 카카오 로컬 API Controller
@@ -28,15 +27,12 @@ public class LocalController {
     /**
      * 주소 검색하기
      * @param address 검색을 원하는 질의어
-     * @param page 결과 페이지 번호
      * @return result(성공여부), meta(검색 정보), documents(검색결과)
      */
     @GetMapping("/get-address/{address}")
-    public Object getAddress(@PathVariable String address,
-                             @RequestParam(required = false) Optional<Integer> page) {
-        int pageNum = page.orElse(1);
+    public Object getAddress(@PathVariable String address) {
         Map resultMap = new HashMap();
-        resultMap.putAll(payloadToMap(localService.getAddress(address, pageNum)));
+        resultMap.putAll(payloadToMap(localService.getAddress(address)));
         resultMap.put("result","success"); // TODO ResultMapUtil ?
         return resultMap;
     }

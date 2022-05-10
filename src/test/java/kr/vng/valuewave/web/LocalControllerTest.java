@@ -38,10 +38,8 @@ public class LocalControllerTest {
     @Test
     public void 주소_검색하기() {
         // given
-        String paramAddress = "금곡";
-        String url = "http://localhost:" + port
-                + "/api/local/get-address/" + paramAddress
-                + "?page=2";
+        String paramAddress = "남양주시";
+        String url = "http://localhost:" + port + "/api/local/get-address/" + paramAddress;
         String result = restTemplate.getForObject(url, String.class).toString();
         System.out.println(result);
     }
