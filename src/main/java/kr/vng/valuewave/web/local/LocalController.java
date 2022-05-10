@@ -1,7 +1,7 @@
 package kr.vng.valuewave.web.local;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import kr.vng.valuewave.web.local.model.Documents;
+import kr.vng.valuewave.web.local.model.LocalPayload;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,12 +32,12 @@ public class LocalController {
     @GetMapping("/get-address/{address}")
     public Object getAddress(@PathVariable String address) {
         Map resultMap = new HashMap();
-        resultMap.putAll(documentsToMap(localService.getAddress(address)));
-        resultMap.put("result","success");
+        resultMap.putAll(payloadToMap(localService.getAddress(address)));
+        resultMap.put("result","success"); // TODO ResultMapUtil ?
         return resultMap;
     }
 
-    public Map documentsToMap(Documents documents) {
-        return OBJECT_MAPPER.convertValue(documents, Map.class);
+    public Map payloadToMap(LocalPayload localPayload) {
+        return OBJECT_MAPPER.convertValue(localPayload, Map.class);
     }
 }
