@@ -6,3 +6,6 @@ server:
 spring:
   profiles:
     include: api
+  devtools:
+    restart:
+      enabled: false
