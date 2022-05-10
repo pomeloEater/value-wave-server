@@ -8,8 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 
 /**
  * 카카오 로컬 API Service
@@ -33,17 +31,20 @@ public class LocalService {
 
     /**
      * 주소 검색하기
+     *
      * @param address 검색을 원하는 질의어
+     * @param page    결과 페이지 번호
      * @return meta(검색 정보), documents(검색결과)
      */
-    public LocalPayload getAddress(String address) {
+    public LocalPayload getAddress(String address, int page) {
         Mono<LocalPayload> payloadMono = kakaoClient.get()
-                        .uri(SEARCH_ADDRESS,
-                                uri -> uri.queryParam("query", address)
-                            .build())
-                        .accept(MediaType.APPLICATION_JSON)
-                        .retrieve()
-                        .bodyToMono(LocalPayload.class);
+                .uri(SEARCH_ADDRESS,
+                        uri -> uri.queryParam("query", address)
+                                .queryParam("page", page)
+                                .build())
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .bodyToMono(LocalPayload.class);
         LocalPayload localPayload = payloadMono.block();
         return localPayload;
     }
