@@ -31,7 +31,7 @@ public class LocalService {
 
     /**
      * 주소 검색하기
-     *
+     * reference(https://developers.kakao.com/docs/latest/ko/local/dev-guide#address-coord)
      * @param address 검색을 원하는 질의어
      * @param page    결과 페이지 번호
      * @return meta(검색 정보), documents(검색결과)
@@ -42,7 +42,6 @@ public class LocalService {
                         uri -> uri.queryParam("query", address)
                                 .queryParam("page", page)
                                 .build())
-                .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .bodyToMono(LocalPayload.class);
         LocalPayload localPayload = payloadMono.block();
