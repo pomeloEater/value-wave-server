@@ -48,4 +48,25 @@ public class LocalService {
         return localPayload;
     }
 
+    /**
+     * 좌표로 주소 변환하기
+     * reference(https://developers.kakao.com/docs/latest/ko/local/dev-guide#coord-to-address)
+     * @param x X좌표값, 경위도인 경우 경도(longitude)
+     * @param y Y좌표값, 경위도인 경우 위도(latitude)
+     * @param coordSystem x, y로 입력되는 값에 대한 좌표계
+     * @return
+     */
+    public LocalPayload getCoordToAddress(String x, String y, String coordSystem) {
+        Mono<LocalPayload> payloadMono = kakaoClient.get()
+                .uri(GEO_COORD_ADDRESS,
+                        uri -> uri.queryParam("x", x)
+                                .queryParam("y",y)
+                                .queryParam("input_coord", coordSystem)
+                                .build())
+                .retrieve()
+                .bodyToMono(LocalPayload.class);
+        LocalPayload localPayload = payloadMono.block();
+        return localPayload;
+    }
+
 }

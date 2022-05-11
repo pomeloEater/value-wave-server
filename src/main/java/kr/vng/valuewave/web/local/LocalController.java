@@ -41,6 +41,17 @@ public class LocalController {
         return resultMap;
     }
 
+    @GetMapping("/get-pnu/{x}/{y}")
+    public Object getPnuCode(@PathVariable String x,
+                             @PathVariable String y,
+                             @RequestParam(required = false) Optional<String> inputCoord) {
+        String coordSystem = inputCoord.orElse("WGS84");
+        Map resultMap = new HashMap();
+        resultMap.putAll(payloadToMap(localService.getCoordToAddress(x,y,coordSystem)));
+        resultMap.put("result","success");
+        return resultMap;
+    }
+
     public Map payloadToMap(LocalPayload localPayload) {
         return OBJECT_MAPPER.convertValue(localPayload, Map.class);
     }

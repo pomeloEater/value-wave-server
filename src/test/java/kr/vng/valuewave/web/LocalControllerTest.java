@@ -22,6 +22,10 @@ public class LocalControllerTest {
     @Value("${server.port}")
     private int port;
 
+    private static final String GET_ADDRESS = "/get-address/";
+    private static final String GET_PNU = "/get-pnu/";
+
+
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
     private TestRestTemplate restTemplate;
@@ -36,12 +40,16 @@ public class LocalControllerTest {
 //        assertThat(localController.getKAKAO_REST_API()).contains("dd3e");
 //    }
 
+    public String getBaseUrl(int port) {
+        return "http://localhost:" + port + "/api/local";
+    }
+
     @DisplayName("특정 주소 검색하기")
     @Test
     public void 주소_검색하기() {
         // given
         String paramAddress = "남양주시";
-        String url = "http://localhost:" + port + "/api/local/get-address/" + paramAddress;
+        String url = String.format("%s%s%s", getBaseUrl(port), GET_ADDRESS, paramAddress);
 
         // when
         String result = restTemplate.getForObject(url, String.class);
@@ -49,5 +57,21 @@ public class LocalControllerTest {
 
         // then
         assertThat(result).contains("success", paramAddress);
+    }
+
+    @DisplayName("좌표로 주소 변환하기")
+    @Test
+    public void 좌표로_주소_변환하기() {
+        // given
+        String x = "127.423084873712";
+        String y = "37.0789561558879";
+        String url = String.format("%s%s%s/%s", getBaseUrl(port), GET_PNU, x, y);
+
+        // when
+        String result = restTemplate.getForObject(url, String.class);
+        LOGGER.info(result);
+
+        // then
+        assertThat(result).contains("경기","안성시","죽산면");
     }
 }
