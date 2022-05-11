@@ -1,5 +1,7 @@
 package kr.vng.valuewave.web;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,6 +26,8 @@ public class LocalControllerTest {
     @Autowired
     private TestRestTemplate restTemplate;
 
+    private static final Logger LOGGER = LogManager.getLogger(LocalControllerTest.class);
+
 
 //    @DisplayName("@Value를 이용한 properties bind")
 //    @Test
@@ -40,8 +44,8 @@ public class LocalControllerTest {
         String url = "http://localhost:" + port + "/api/local/get-address/" + paramAddress;
 
         // when
-        String result = restTemplate.getForObject(url, String.class).toString();
-//        System.out.println(result);
+        String result = restTemplate.getForObject(url, String.class);
+        LOGGER.info(result);
 
         // then
         assertThat(result).contains("success", paramAddress);
