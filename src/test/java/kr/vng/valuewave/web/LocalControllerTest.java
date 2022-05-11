@@ -97,4 +97,20 @@ public class LocalControllerTest {
         // then
         assertThat(result).contains("경기","안성시","죽산면");
     }
+
+    @DisplayName("좌표로 PNU코드 변환하기")
+    @Test
+    public void 좌표로_PNU코드_변환하기() {
+        // given
+        String x = "127.1086228";
+        String y = "37.4012191";
+        String url = String.format("%s%s%s/%s", getBaseUrl(port), GET_PNU, x, y);
+
+        // when
+        String result = restTemplate.getForObject(url, String.class);
+        LOGGER.info(result);
+
+        // then
+        assertThat(result).contains("4113510900");
+    }
 }

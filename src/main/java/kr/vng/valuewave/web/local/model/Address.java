@@ -13,6 +13,7 @@ public class Address {
     @JsonProperty("region_2depth_name") public String region2depthName; // 지역 2 Depth, 구 단위
     @JsonProperty("region_3depth_name") public String region3depthName; // 지역 3 Depth, 동 단위
     @JsonProperty("region_3depth_h_name") public String region3depthHName; // 지역 3 Depth, 행정동 명칭
+    @JsonProperty("region_4depth_name") public String region4depthName; // 지역 4 Depth, 리 단위
     public String hCode; // 행정 코드
     public String bCode; // 법정 코드
     public String mountainYn; // 산 여부, Y 또는 N
