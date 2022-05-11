@@ -22,6 +22,8 @@ public class LocalControllerTest {
     @Value("${server.port}")
     private int port;
 
+    private static final String SEARCH_ADDRESS = "/search-address/";
+    private static final String GET_REGION = "/get-region/";
     private static final String GET_ADDRESS = "/get-address/";
     private static final String GET_PNU = "/get-pnu/";
 
@@ -40,6 +42,11 @@ public class LocalControllerTest {
 //        assertThat(localController.getKAKAO_REST_API()).contains("dd3e");
 //    }
 
+    /**
+     * URL 주소 반환
+     * @param port
+     * @return
+     */
     public String getBaseUrl(int port) {
         return "http://localhost:" + port + "/api/local";
     }
@@ -49,7 +56,7 @@ public class LocalControllerTest {
     public void 주소_검색하기() {
         // given
         String paramAddress = "남양주시";
-        String url = String.format("%s%s%s", getBaseUrl(port), GET_ADDRESS, paramAddress);
+        String url = String.format("%s%s%s", getBaseUrl(port), SEARCH_ADDRESS, paramAddress);
 
         // when
         String result = restTemplate.getForObject(url, String.class);
@@ -59,13 +66,29 @@ public class LocalControllerTest {
         assertThat(result).contains("success", paramAddress);
     }
 
+    @DisplayName("좌표로 행정구역정보 받기")
+    @Test
+    public void 좌표로_행정구역정보_받기() {
+        // given
+        String x = "127.1086228";
+        String y = "37.4012191";
+        String url = String.format("%s%s%s/%s", getBaseUrl(port), GET_REGION, x, y);
+
+        // when
+        String result = restTemplate.getForObject(url, String.class);
+        LOGGER.info(result);
+
+        // then
+        assertThat(result).contains("4113510900");
+    }
+
     @DisplayName("좌표로 주소 변환하기")
     @Test
     public void 좌표로_주소_변환하기() {
         // given
         String x = "127.423084873712";
         String y = "37.0789561558879";
-        String url = String.format("%s%s%s/%s", getBaseUrl(port), GET_PNU, x, y);
+        String url = String.format("%s%s%s/%s", getBaseUrl(port), GET_ADDRESS, x, y);
 
         // when
         String result = restTemplate.getForObject(url, String.class);

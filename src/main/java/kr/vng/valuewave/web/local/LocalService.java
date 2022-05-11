@@ -36,7 +36,7 @@ public class LocalService {
      * @param page    결과 페이지 번호
      * @return meta(검색 정보), documents(검색결과)
      */
-    public LocalPayload getAddress(String address, int page) {
+    public LocalPayload searchAddress(String address, int page) {
         Mono<LocalPayload> payloadMono = kakaoClient.get()
                 .uri(SEARCH_ADDRESS,
                         uri -> uri.queryParam("query", address)
@@ -44,8 +44,27 @@ public class LocalService {
                                 .build())
                 .retrieve()
                 .bodyToMono(LocalPayload.class);
-        LocalPayload localPayload = payloadMono.block();
-        return localPayload;
+        return payloadMono.block();
+    }
+
+    /**
+     * 좌표로 행정구역정보 받기
+     * reference(https://developers.kakao.com/docs/latest/ko/local/dev-guide#coord-to-district)
+     * @param x X좌표값, 경위도인 경우 경도(longitude)
+     * @param y Y좌표값, 경위도인 경우 위도(latitude)
+     * @param coordSystem x, y로 입력되는 값에 대한 좌표계
+     * @return meta(검색 정보), documents(검색결과)
+     */
+    public LocalPayload getRegion(String x, String y, String coordSystem) {
+        Mono<LocalPayload> payloadMono = kakaoClient.get()
+                .uri(GEO_COORD_REGION,
+                        uri -> uri.queryParam("x", x)
+                                .queryParam("y",y)
+                                .queryParam("input_coord", coordSystem)
+                                .build())
+                .retrieve()
+                .bodyToMono(LocalPayload.class);
+        return payloadMono.block();
     }
 
     /**
@@ -54,9 +73,9 @@ public class LocalService {
      * @param x X좌표값, 경위도인 경우 경도(longitude)
      * @param y Y좌표값, 경위도인 경우 위도(latitude)
      * @param coordSystem x, y로 입력되는 값에 대한 좌표계
-     * @return
+     * @return meta(검색 정보), documents(검색결과)
      */
-    public LocalPayload getCoordToAddress(String x, String y, String coordSystem) {
+    public LocalPayload getAddress(String x, String y, String coordSystem) {
         Mono<LocalPayload> payloadMono = kakaoClient.get()
                 .uri(GEO_COORD_ADDRESS,
                         uri -> uri.queryParam("x", x)
@@ -65,8 +84,19 @@ public class LocalService {
                                 .build())
                 .retrieve()
                 .bodyToMono(LocalPayload.class);
-        LocalPayload localPayload = payloadMono.block();
-        return localPayload;
+        return payloadMono.block();
+    }
+
+    /**
+     * 좌표로 PNU코드 변환하기
+     * @param x X좌표값, 경위도인 경우 경도(longitude)
+     * @param y Y좌표값, 경위도인 경우 위도(latitude)
+     * @param coordSystem x, y로 입력되는 값에 대한 좌표계
+     * @return pnu코드 값
+     */
+    public String getPnuCode(String x, String y, String coordSystem) {
+
+        return "";
     }
 
 }
