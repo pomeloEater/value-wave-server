@@ -8,7 +8,9 @@ spring:
     include: api
   devtools:
     restart:
-      enabled: false
+      enabled: true
+    livereload:
+      enabled: true
 
 logging:
   config: classpath:log4j2.yml
