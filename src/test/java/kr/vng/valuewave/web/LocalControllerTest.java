@@ -44,8 +44,8 @@ public class LocalControllerTest {
 
     /**
      * URL 주소 반환
-     * @param port
-     * @return
+     * @param port 포트번호
+     * @return TestRestTemplate 기본 주소
      */
     public String getBaseUrl(int port) {
         return "http://localhost:" + port + "/api/local";
