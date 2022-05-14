@@ -40,9 +40,6 @@ frontend {
     nodeDistributionProvided = false
     nodeVersion = '16.15.0'
     nodeDistributionUrlRoot = 'https://nodejs.org/dist/'
-    nodeDistributionUrlPathPattern = 'vVERSION/node-vVERSION-ARCH.TYPE'
-    nodeDistributionServerUsername = 'username'
-    nodeDistributionServerPassword = 'password'
     nodeInstallDirectory = file("${projectDir}/node")
 
     packageJsonDirectory = file("${projectDir}/frontend")
@@ -53,4 +50,17 @@ frontend {
     installScript = 'install'
     cleanScript = 'run clean'
     assembleScript = 'run build'
+}
+
+tasks.named('assembleFrontend') {
+    doLast {
+        copy {
+            from "${projectDir}/frontend/build"
+            into "${projectDir}/src/main/resources/static"
+        }
+    }
+}
+
+clean.doFirst {
+    delete "${projectDir}/src/main/resources/static/"
 }
