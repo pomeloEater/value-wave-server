@@ -1,2 +1,16 @@
 server:
   port: 8000
+  tomcat:
+    uri-encoding: UTF-8
+
+spring:
+  profiles:
+    include: api
+  devtools:
+    restart:
+      enabled: true
+    livereload:
+      enabled: true
+
+logging:
+  config: classpath:log4j2.yml
