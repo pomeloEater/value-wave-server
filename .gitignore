@@ -144,3 +144,9 @@ gen
 
 # API KEY 설정 파일
 /src/main/resources/application-api.yml
+
+# REACT 파일
+/frontend/
+/src/main/resources/static/
+/node/
+
