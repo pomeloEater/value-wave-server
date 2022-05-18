@@ -13,7 +13,7 @@ import java.util.function.Consumer;
 @Configuration
 public class WebClientConfig {
 
-    @Value("${kakao.rest}")
+    @Value("${api.kakao.dev}")
     private String KAKAO_REST_API;
 
     @Bean
