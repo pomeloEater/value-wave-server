@@ -142,8 +142,8 @@ fabric.properties
 out
 gen
 
-# API KEY 설정 파일
-/src/main/resources/application-api.yml
+# 설정 파일
+/src/main/resources/application-env.yml
 
 # REACT 파일
 /frontend/

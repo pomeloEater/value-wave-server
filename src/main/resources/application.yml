@@ -5,7 +5,7 @@ server:
 
 spring:
   profiles:
-    include: api
+    include: env
   devtools:
     restart:
       enabled: true
