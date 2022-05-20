@@ -16,7 +16,7 @@
 ### install
 * [Visual Studio Code](https://code.visualstudio.com/download)
 * [IntelliJ IDEA Ultimate](https://www.jetbrains.com/idea/download/#section=windows)
-* [Node.js](https://nodejs.org/en/download/)
+* [Node.js](https://nodejs.org/dist/v16.15.0/) 16.15.0
 * [yarn](https://classic.yarnpkg.com/lang/en/docs/install/#windows-stable)
 
 ### Clone Repositories
@@ -37,5 +37,5 @@ yarn set version berry
 rm -rf node_modules
 yarn install
 # 다시 node_modules가 설치되는 경우 .yarnrc.yml 파일 확인 필요
-yarn add #dependency_name
+# yarn add #dependency_name
 ```
