@@ -2,7 +2,7 @@ package kr.vng.valuewave.web.local;
 
 import kr.vng.valuewave.utils.ResultMapUtil;
 import kr.vng.valuewave.web.local.model.LocalPayload;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -10,16 +10,12 @@ import java.util.Optional;
 /**
  * 카카오 로컬 API Controller
  */
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/local")
 public class LocalController {
 
-    public LocalService localService;
-
-    @Autowired
-    public LocalController(LocalService localService) {
-        this.localService = localService;
-    }
+    public final LocalService localService;
 
     /**
      * 주소 검색하기
@@ -33,11 +29,10 @@ public class LocalController {
                                 @RequestParam(required = false) Optional<Integer> page) {
         int pageNum = page.orElse(1);
         LocalPayload result = localService.searchAddress(address, pageNum);
-        if (result.getDocuments().size() > 0) {
-            return ResultMapUtil.success(result);
-        } else {
+        if (result.getDocuments().size() == 0) {
             return ResultMapUtil.failed();
         }
+        return ResultMapUtil.success(result);
     }
 
     /**
@@ -52,13 +47,12 @@ public class LocalController {
     public Object getRegion(@PathVariable String x,
                             @PathVariable String y,
                             @RequestParam(required = false) Optional<String> inputCoord) {
-        String coordSystem = inputCoord.orElse("WGS84");
+        String coordSystem = inputCoord.orElse("WGS84"); // 좌표계
         LocalPayload result = localService.getRegion(x, y, coordSystem);
-        if (result.getDocuments().size() > 0) {
-            return ResultMapUtil.success(result);
-        } else {
+        if (result.getDocuments().size() == 0) {
             return ResultMapUtil.failed();
         }
+        return ResultMapUtil.success(result);
     }
 
     /**
@@ -73,13 +67,12 @@ public class LocalController {
     public Object getAddress(@PathVariable String x,
                              @PathVariable String y,
                              @RequestParam(required = false) Optional<String> inputCoord) {
-        String coordSystem = inputCoord.orElse("WGS84");
+        String coordSystem = inputCoord.orElse("WGS84"); // 좌표계
         LocalPayload address = localService.getAddress(x, y, coordSystem);
-        if (address.getDocuments().size() > 0) {
-            return ResultMapUtil.success(address);
-        } else {
+        if (address.getDocuments().size() == 0) {
             return ResultMapUtil.failed();
         }
+        return ResultMapUtil.success(address);
     }
 
     /**
@@ -94,12 +87,11 @@ public class LocalController {
     public Object getPnuCode(@PathVariable String x,
                              @PathVariable String y,
                              @RequestParam(required = false) Optional<String> inputCoord) {
-        String coordSystem = inputCoord.orElse("WGS84");
-        String pnu = localService.getPnuCode(x, y, coordSystem);
-        if (pnu.length() == 19) {
-            return ResultMapUtil.success(pnu);
-        } else {
+        String coordSystem = inputCoord.orElse("WGS84"); // 좌표계
+        String pnu = localService.getPnuCode(x, y, coordSystem); // PNU 코드
+        if (pnu.length() != 19) {
             return ResultMapUtil.failed();
         }
+        return ResultMapUtil.success(pnu);
     }
 }
