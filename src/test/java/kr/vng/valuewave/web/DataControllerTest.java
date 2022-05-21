@@ -1,8 +1,5 @@
 package kr.vng.valuewave.web;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import org.apache.commons.jxpath.xml.XMLParser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.DisplayName;
@@ -19,7 +16,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -53,9 +49,10 @@ public class DataControllerTest {
     public void 검색범위_wfs_가져오기() throws IOException {
         // given
         String paramPnuCode = "4113510300101580002";
-        String paramBbox = "37.35875771663394,127.0894214286487,37.37173721573676,127.12411871245041,EPSG:4326";
+//        String paramBbox = "37.35875771663394,127.0894214286487,37.37173721573676,127.12411871245041,EPSG:4326";
+        String paramBbox = "37.35875771663394,37.37173721573676,127.0894214286487,127.12411871245041";
         String urlMono = String.format("%s%s%s?bbox=%s", getBaseUrl(port), GET_SHAPE, paramPnuCode, paramBbox);
-
+        LOGGER.info(urlMono);
         // when
         String resultMono = restTemplate.getForObject(urlMono, String.class);
         LOGGER.info(resultMono);

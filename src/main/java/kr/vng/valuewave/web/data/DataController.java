@@ -2,22 +2,13 @@ package kr.vng.valuewave.web.data;
 
 
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import mil.nga.sf.geojson.FeatureConverter;
-import mil.nga.sf.geojson.Geometry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.geotools.data.simple.SimpleFeatureCollection;
-import org.geotools.wfs.GML;
-import org.geotools.wfs.WFS;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
-import reactor.core.publisher.Flux;
+import org.springframework.web.util.DefaultUriBuilderFactory;
 import reactor.core.publisher.Mono;
 
 import java.io.BufferedReader;
@@ -40,6 +31,8 @@ public class DataController {
 
     @Value("${data.dev.encoding}")
     private String DATA_API_KEY;
+    @Value("${vworld.dev}")
+    private String VWORLD_API_KEY;
 
     @Autowired
     public DataController(WebClient wfsClient) {
@@ -54,6 +47,30 @@ public class DataController {
     @GetMapping("/get-shape/{pnuCode}")
     public Object getShape(@PathVariable String pnuCode,
                            @RequestParam String bbox) throws Exception {
+        // uri ServiceKey encoding
+        DefaultUriBuilderFactory builderFactory = new DefaultUriBuilderFactory("http://api.vworld.kr");
+        builderFactory.setEncodingMode(DefaultUriBuilderFactory.EncodingMode.VALUES_ONLY);
+        WebClient webClient = WebClient.builder()
+                .baseUrl("http://api.vworld.kr")
+                .uriBuilderFactory(builderFactory)
+                .build();
+        Mono<String> dataMono = webClient.get()
+                .uri("/req/data",
+                        uri -> uri.queryParam("service", "data")
+                                .queryParam("version","2.0")
+                                .queryParam("request","GetFeature")
+                                .queryParam("key", VWORLD_API_KEY)
+                                .queryParam("domain","http://localhost:8000")
+                                .queryParam("format","json")
+                                .queryParam("data","LP_PA_CBND_BUBUN")
+                                .queryParam("geomFilter","BOX(" + bbox + ")")
+                                .queryParam("attrFilter", "pnu:=:"+pnuCode)
+                                .queryParam("crs","EPSG:4326")
+                                .build())
+                .retrieve()
+                .bodyToMono(String.class);
+        String str = dataMono.block();
+        LOGGER.info(str);
         return null;
 //        // 500 Internal Server Error from GET
 //        Mono<String> dataMono = wfsClient.get()
