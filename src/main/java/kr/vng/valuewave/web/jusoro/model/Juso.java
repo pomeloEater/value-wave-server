@@ -15,6 +15,7 @@ public class Juso {
     private String zipNo; // 우편번호
     private String admCd; // 행정구역코드
     private String rdMgtSn; // 도로명코드
+    private String rnMgtSn; // 도로명코드
     private String bdMgtSn; // 건물관리번호
     private String detBdNmList; // 상세건물명(필수X)
     private String bdNm; // 건물명
@@ -33,4 +34,7 @@ public class Juso {
     private String hstryYn; // 지난이력정보 여부(필수X)
     private String relJibun; // 관련지번(필수X)
     private String hemdNm; // 관할주민센터(필수X)
+
+    private String entX; // X좌표
+    private String entY; // Y좌표
 }

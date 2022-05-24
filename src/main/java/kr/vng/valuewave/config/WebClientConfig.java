@@ -1,10 +1,12 @@
 package kr.vng.valuewave.config;
 
+import kr.vng.valuewave.config.prop.GlobalPropertySource;
+import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
@@ -14,15 +16,17 @@ import reactor.core.publisher.Mono;
 import java.util.Collections;
 import java.util.function.Consumer;
 
+@RequiredArgsConstructor
 @Configuration
+@DependsOn(value = {"globalPropertySource"})
 public class WebClientConfig {
 
-    @Value("${api.kakao.dev}")
-    private String KAKAO_REST_API;
+    private final GlobalPropertySource globalPropertySource;
 
     private static final Logger LOGGER = LogManager.getLogger();
     private static final String KAKAO_BASE = "https://dapi.kakao.com";
-    private static final String JUSORO_BASE = "http://127.0.0.1:8983/app/search/addrSearchApi.do";
+    private static final String JUSORO_SOLUTION_BASE = "http://127.0.0.1:8983/app/search/addrSearchApi.do";
+    private static final String JUSORO_OPEN_BASE = "https://www.juso.go.kr/addrlink";
 
     /**
      * 카카오 REST API WebClient
@@ -35,7 +39,7 @@ public class WebClientConfig {
                 .defaultHeaders(new Consumer<HttpHeaders>() {
                     @Override
                     public void accept(HttpHeaders httpHeaders) {
-                        httpHeaders.add(HttpHeaders.AUTHORIZATION, "KakaoAK " + KAKAO_REST_API);
+                        httpHeaders.add(HttpHeaders.AUTHORIZATION, "KakaoAK " + globalPropertySource.getKakaoRest());
                         httpHeaders.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
                     }
                 })
@@ -47,9 +51,30 @@ public class WebClientConfig {
      * @return WebClient
      */
     @Bean
-    public WebClient jusoroClient() {
+    public WebClient jusoroSolutionClient() {
+        return getWebClientByBaseUrl(JUSORO_SOLUTION_BASE);
+    }
+
+    /**
+     * 도로명주소 오픈API WebClient
+     * @return WebClient
+     */
+    @Bean
+    public WebClient jusoroOpenClient() {
+        return getWebClientByBaseUrl(JUSORO_OPEN_BASE);
+    }
+
+    // data portal client
+
+
+    /**
+     * WebClient 생성
+     * @param baseUrl 기본 URL
+     * @return WebClient
+     */
+    private WebClient getWebClientByBaseUrl(String baseUrl) {
         return WebClient.builder()
-                .baseUrl(JUSORO_BASE)
+                .baseUrl(baseUrl)
                 .defaultHeaders(new Consumer<HttpHeaders>() {
                     @Override
                     public void accept(HttpHeaders httpHeaders) {
@@ -62,9 +87,6 @@ public class WebClientConfig {
                 })
                 .build();
     }
-
-
-    // data portal client
 
     /**
      * logging request
