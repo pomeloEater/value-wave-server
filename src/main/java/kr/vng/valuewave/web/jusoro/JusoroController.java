@@ -34,7 +34,7 @@ public class JusoroController {
         LOGGER.info(keyword, pageNum);
         JusoroPayload jusoroPayload = jusoroService.searchAddressBySolution(keyword, pageNum);
         if (jusoroPayload == null || jusoroPayload.getResults().getJuso().size() == 0) {
-            return ResultMapUtil.failed();
+            return ResultMapUtil.failed(jusoroPayload.getResults());
         }
         return ResultMapUtil.success(jusoroPayload.getResults());
     }
@@ -53,7 +53,7 @@ public class JusoroController {
         LOGGER.info(keyword, pageNum);
         JusoroPayload jusoroPayload = jusoroService.searchAddressByOpen(keyword, pageNum);
         if (jusoroPayload == null || jusoroPayload.getResults().getJuso().size() == 0) {
-            return ResultMapUtil.failed();
+            return ResultMapUtil.failed(jusoroPayload.getResults());
         }
         return ResultMapUtil.success(jusoroPayload.getResults());
     }
@@ -75,7 +75,7 @@ public class JusoroController {
                                      @RequestParam int buldSlno) {
         JusoroPayload jusoroPayload = jusoroService.getCoordsByAddress(admCd, rnMgtSn, udrtYn, buldMnnm, buldSlno);
         if (jusoroPayload == null || jusoroPayload.getResults().getJuso().size() == 0) {
-            return ResultMapUtil.failed();
+            return ResultMapUtil.failed(jusoroPayload.getResults());
         }
         return ResultMapUtil.success(jusoroPayload.getResults());
     }
