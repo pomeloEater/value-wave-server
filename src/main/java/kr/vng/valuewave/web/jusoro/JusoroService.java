@@ -1,6 +1,9 @@
 package kr.vng.valuewave.web.jusoro;
 
 import kr.vng.valuewave.config.prop.GlobalPropertySource;
+import kr.vng.valuewave.web.jusoro.model.Common;
+import kr.vng.valuewave.web.jusoro.model.Juso;
+import kr.vng.valuewave.web.jusoro.model.JusoroEntrc;
 import kr.vng.valuewave.web.jusoro.model.JusoroPayload;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
@@ -9,6 +12,8 @@ import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 /**
  * 도로명주소 검색 API Service
@@ -21,6 +26,7 @@ public class JusoroService {
     private final GlobalPropertySource globalPropertySource;
     private final WebClient jusoroSolutionClient;
     private final WebClient jusoroOpenClient;
+    private final JusoroMapper jusoroMapper;
 
     private static final Logger LOGGER = LogManager.getLogger(JusoroService.class);
     private static final String ROAD_ADDRESS = "/addrLinkApi.do";
@@ -91,6 +97,34 @@ public class JusoroService {
                 .retrieve()
                 .bodyToMono(JusoroPayload.class);
         return payloadMono.block();
+    }
+
+    /**
+     * 좌표 정보 포함하여 주소 검색하기
+     * @param keyword     주소 검색어
+     * @param currentPage 현재 페이지 번호
+     * @return common(검색 정보), juso(검색 결과)
+     */
+    public JusoroPayload searchAddressWithCoordsBySolution(String keyword, int currentPage) {
+        JusoroPayload searchResult = searchAddressBySolution(keyword, currentPage);
+        // 검색 정보 가져오기
+        Common common = searchResult.getResults().getCommon();
+        LOGGER.info(common);
+        if (!"0".equals(common.getErrorCode())) {
+            return searchResult;
+        }
+
+        // 검색 결과 가져오기
+        List<Juso> jusoList = searchResult.getResults().getJuso();
+        LOGGER.info(jusoList);
+        if (jusoList.size() == 0) {
+            return searchResult;
+        }
+
+        List<JusoroEntrc> entrcList = jusoroMapper.searchByPnuCode(jusoList);
+        LOGGER.info(entrcList);
+
+        return searchResult;
     }
 
 }

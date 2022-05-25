@@ -37,7 +37,7 @@ public class DatasourceConfig {
         final SqlSessionFactoryBean sqlSessionFactory = new SqlSessionFactoryBean();
         sqlSessionFactory.setDataSource(customDataSource);
         PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
-//        sqlSessionFactory.setMapperLocations(resolver.getResources("classpath:mapper/**/*.xml"));
+        sqlSessionFactory.setMapperLocations(resolver.getResources("classpath:mapper/**/*.xml"));
         return sqlSessionFactory.getObject();
     }
 

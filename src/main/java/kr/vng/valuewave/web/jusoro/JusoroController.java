@@ -27,12 +27,12 @@ public class JusoroController {
      * @param currentPage 현재 페이지번호(기본값: 1)
      * @return result(성공여부), common(검색 정보), juso(검색 결과)
      */
-    @GetMapping("/search-address-solution/{keyword}")
+    @GetMapping("/search-address/{keyword}")
     public Object searchAddressBySolution(@PathVariable String keyword,
                                 @RequestParam(required = false)Optional<Integer> currentPage) {
         int pageNum = currentPage.orElse(1);
         LOGGER.info(keyword, pageNum);
-        JusoroPayload jusoroPayload = jusoroService.searchAddressBySolution(keyword, pageNum);
+        JusoroPayload jusoroPayload = jusoroService.searchAddressWithCoordsBySolution(keyword, pageNum);
         if (jusoroPayload == null || jusoroPayload.getResults().getJuso().size() == 0) {
             return ResultMapUtil.failed(jusoroPayload.getResults());
         }
@@ -46,13 +46,13 @@ public class JusoroController {
      * @param currentPage 현재 페이지번호(기본값: 1)
      * @return result(성공여부), common(검색 정보), juso(검색 결과)
      */
-    @GetMapping("/search-address/{keyword}")
+    @GetMapping("/search-address-open/{keyword}")
     public Object searchAddress(@PathVariable String keyword,
                                 @RequestParam(required = false)Optional<Integer> currentPage) {
         int pageNum = currentPage.orElse(1);
         LOGGER.info(keyword, pageNum);
         JusoroPayload jusoroPayload = jusoroService.searchAddressByOpen(keyword, pageNum);
-        if (jusoroPayload == null || jusoroPayload.getResults().getJuso().size() == 0) {
+        if (jusoroPayload.getResults().getJuso() == null || jusoroPayload.getResults().getJuso().size() == 0) {
             return ResultMapUtil.failed(jusoroPayload.getResults());
         }
         return ResultMapUtil.success(jusoroPayload.getResults());
