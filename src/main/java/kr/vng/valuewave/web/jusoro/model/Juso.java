@@ -39,4 +39,6 @@ public class Juso {
 
     private BigDecimal entX; // X좌표
     private BigDecimal entY; // Y좌표
+
+    private String pnu; // pnu 코드드
 }

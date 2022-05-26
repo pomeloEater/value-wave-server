@@ -4,7 +4,7 @@
 
 <mapper namespace="kr.vng.valuewave.web.jusoro.JusoroMapper">
 
-    <select id="searchByPnuCode" parameterType="java.util.List" resultType="java.util.List">
+    <select id="searchByPnuCode" parameterType="java.util.List" resultType="kr.vng.valuewave.web.jusoro.model.JusoroEntrc">
         SELECT
             SGG_CD
             ,ENT_CD
