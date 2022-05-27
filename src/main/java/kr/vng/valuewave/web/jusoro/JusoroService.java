@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -117,26 +116,25 @@ public class JusoroService {
 
         // 검색 결과 가져오기
         List<Juso> jusoList = searchResult.getResults().getJuso();
-        LOGGER.info(jusoList);
         if (jusoList.size() == 0) {
             return searchResult;
         }
 
         // 위치요약정보 DB에서 해당되는 목록 가져오기
         List<JusoroEntrc> entrcList = jusoroMapper.searchByPnuCode(jusoList);
-        LOGGER.info(entrcList);
-
         // for문으로 찾아서 넣어주고
         for(Juso juso: jusoList) {
             for(JusoroEntrc entrc: entrcList) {
-                if ((juso.getRnMgtSn().equals(entrc.getRnMgtSn()) || juso.getRdMgtSn().equals(entrc.getRnMgtSn()))
-                    && juso.getUdrtYn().equals(entrc.getUdrtYn())
-                    && juso.getBuldMnnm() == (entrc.getBuldMnnm())
-                    && juso.getBuldSlno() == (entrc.getBuldSlno())) {
+                if (juso.getRdMgtSn().equals(entrc.getRnMgtSn())
+                        && juso.getUdrtYn().equals(entrc.getUdrtYn())
+                        && juso.getBuldMnnm() == (entrc.getBuldMnnm())
+                        && juso.getBuldSlno() == (entrc.getBuldSlno())) {
                     juso.setEntX(entrc.getEntX());
                     juso.setEntY(entrc.getEntY());
+                    break;
                 }
             }
+            // pnu코드 설정
             String pnu = juso.getBdMgtSn().substring(0,19);
             juso.setPnu(pnu);
         }
