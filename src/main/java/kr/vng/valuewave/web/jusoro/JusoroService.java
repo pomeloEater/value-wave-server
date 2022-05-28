@@ -32,6 +32,20 @@ public class JusoroService {
     private static final String ROAD_ADDRESS = "/addrLinkApi.do";
     private static final String GEOCODING = "/addrCoordApi.do";
 
+
+    /**
+     * DB 커넥션 확인
+     * @return boolean 확인여부
+     */
+    public boolean checkConnection() {
+        try {
+            jusoroMapper.checkConnection();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     /**
      * (도로명주소검색솔루션) 주소 검색
      * reference(https://www.juso.go.kr/addrlink/jusoSearchSolutionIntroduce.do)
@@ -120,6 +134,12 @@ public class JusoroService {
             return searchResult;
         }
 
+        // DB 연결 확인
+        boolean isConnected = checkConnection();
+        if (!isConnected) {
+            return searchResult;
+        }
+
         // 위치요약정보 DB에서 해당되는 목록 가져오기
         List<JusoroEntrc> entrcList = jusoroMapper.searchByPnuCode(jusoList);
         // for문으로 찾아서 넣어주고
@@ -144,5 +164,4 @@ public class JusoroService {
 
         return searchResult;
     }
-
 }

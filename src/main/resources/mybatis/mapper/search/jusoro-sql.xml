@@ -4,6 +4,11 @@
 
 <mapper namespace="kr.vng.valuewave.web.jusoro.JusoroMapper">
 
+    <!-- DB 연결 확인 -->
+    <select id="checkConnection" resultType="hashMap">
+        SELECT * FROM DUAL
+    </select>
+
     <select id="searchByPnuCode" parameterType="juso" resultType="jusoroEntrc">
         SELECT
             SGG_CD
