@@ -1,5 +1,6 @@
 package kr.vng.valuewave.web;
 
+import kr.vng.valuewave.mvc.DefaultMap;
 import kr.vng.valuewave.web.estate.EstateService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -8,6 +9,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import java.util.HashMap;
+import java.util.List;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -20,37 +24,35 @@ public class EstateServiceTests {
     @Test
     public void 토지대장_메서드_실행() {
         // given
-        String pnu = "";
+        String pnu = "4219010100106620000";
 
         // then
-        estateService.getLandBook(pnu);
-        estateService.getOfficialLandPrice(pnu);
-        estateService.getOfficialLandPriceForStandard(pnu);
-        estateService.getShareLandOwnership(pnu);
-        estateService.getIndividualHousePrice(pnu);
-        estateService.getApartmentHousePrice(pnu);
+        LOGGER.info(estateService.getLandBook(pnu));
+        LOGGER.info(estateService.getOfficialLandPrice(pnu));
+        LOGGER.info(estateService.getOfficialLandPriceForStandard(pnu));
+        LOGGER.info(estateService.getShareLandOwnership(pnu));
+        LOGGER.info(estateService.getIndividualHousePrice(pnu));
+        LOGGER.info(estateService.getApartmentHousePrice(pnu));
     }
 
     @Test
     public void 건축물대장_메서드_실행() {
-//        // given
-//        String pnu = "";
-//
-//        // set
-//        String bldrgstPk = estateService.getBldrgstPk(pnu);
-//        LOGGER.info(bldrgstPk);
-//
-//        // then
-//        estateService.getBuldBook(pnu);
-//        estateService.getRecapTitle(pnu);
-//        estateService.getTitle(pnu);
-//        estateService.getFloor(pnu);
-//        estateService.getExpos(pnu);
-//        estateService.getExposPublicArea(pnu);
-//        estateService.getAttachedJibun(pnu);
-//        estateService.getWclf(pnu);
-//        estateService.getJijigu(pnu);
-//        estateService.getOwner(pnu);
-//        estateService.getHousePrice(pnu);
+        // given
+        String pnu = "4219010100106620000";
+
+        // then
+        List<DefaultMap> buldBookList = estateService.getBuldBookByPnu(pnu);
+        LOGGER.info(buldBookList);
+        String bldrgstPk = buldBookList.get(0).get("bldrgstPk").toString();
+        LOGGER.info(bldrgstPk);
+        LOGGER.info(estateService.getRecapTitle(bldrgstPk));
+        LOGGER.info(estateService.getTitle(bldrgstPk));
+        LOGGER.info(estateService.getFloor(bldrgstPk));
+        LOGGER.info(estateService.getExposByPnu(pnu));
+        LOGGER.info(estateService.getAttachedJibun(bldrgstPk));
+        LOGGER.info(estateService.getWclf(bldrgstPk));
+        LOGGER.info(estateService.getJijigu(bldrgstPk));
+        LOGGER.info(estateService.getOwner(bldrgstPk));
+        LOGGER.info(estateService.getHousePrice(bldrgstPk));
     }
 }

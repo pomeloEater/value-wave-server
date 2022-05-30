@@ -1,11 +1,11 @@
 package kr.vng.valuewave.web.estate;
 
+import kr.vng.valuewave.mvc.DefaultMap;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -21,10 +21,9 @@ public class EstateService {
      * @param pnu
      * @return
      */
-    public List<HashMap<String, Object>> getLandBook(String pnu) {
-        List<HashMap<String,Object>> landList = estateMapper.getLandBook(pnu);
-        LOGGER.info(landList);
-        return null;
+    public List<DefaultMap> getLandBook(String pnu) {
+        List<DefaultMap> landList = estateMapper.getLandBook(pnu);
+        return landList;
     }
 
     /**
@@ -32,10 +31,9 @@ public class EstateService {
      * @param pnu
      * @return
      */
-    public List<HashMap<String, Object>> getOfficialLandPrice(String pnu) {
-        List<HashMap<String, Object>> priceList = estateMapper.getOfficialLandPrice(pnu);
-        LOGGER.info(priceList);
-        return null;
+    public List<DefaultMap> getOfficialLandPrice(String pnu) {
+        List<DefaultMap> priceList = estateMapper.getOfficialLandPrice(pnu);
+        return priceList;
     }
 
     /**
@@ -43,10 +41,9 @@ public class EstateService {
      * @param pnu
      * @return
      */
-    public List<HashMap<String, Object>> getOfficialLandPriceForStandard(String pnu) {
-        List<HashMap<String, Object>> priceList = estateMapper.getOfficialLandPriceForStandard(pnu);
-        LOGGER.info(priceList);
-        return null;
+    public List<DefaultMap> getOfficialLandPriceForStandard(String pnu) {
+        List<DefaultMap> priceList = estateMapper.getOfficialLandPriceForStandard(pnu);
+        return priceList;
     }
 
     /**
@@ -54,10 +51,9 @@ public class EstateService {
      * @param pnu
      * @return
      */
-    public List<HashMap<String, Object>> getShareLandOwnership(String pnu) {
-        List<HashMap<String, Object>> ownershipList = estateMapper.getShareLandOwnership(pnu);
-        LOGGER.info(ownershipList);
-        return null;
+    public List<DefaultMap> getShareLandOwnership(String pnu) {
+        List<DefaultMap> ownershipList = estateMapper.getShareLandOwnership(pnu);
+        return ownershipList;
     }
 
     /**
@@ -65,10 +61,9 @@ public class EstateService {
      * @param pnu
      * @return
      */
-    public List<HashMap<String, Object>> getIndividualHousePrice(String pnu) {
-        List<HashMap<String, Object>> priceList = estateMapper.getIndividualHousePrice(pnu);
-        LOGGER.info(priceList);
-        return null;
+    public List<DefaultMap> getIndividualHousePrice(String pnu) {
+        List<DefaultMap> priceList = estateMapper.getIndividualHousePrice(pnu);
+        return priceList;
     }
 
     /**
@@ -76,21 +71,9 @@ public class EstateService {
      * @param pnu
      * @return
      */
-    public List<HashMap<String, Object>> getApartmentHousePrice(String pnu) {
-        List<HashMap<String, Object>> priceList = estateMapper.getApartmentHousePrice(pnu);
-        LOGGER.info(priceList);
-        return null;
-    }
-
-
-    /**
-     * 건축물대장마스터 PK
-     * @param pnu
-     * @return
-     */
-    public String getBldrgstPk(String pnu) {
-        String bldrgstPk = estateMapper.getBldrgstPk(pnu);
-        return bldrgstPk;
+    public List<DefaultMap> getApartmentHousePrice(String pnu) {
+        List<DefaultMap> priceList = estateMapper.getApartmentHousePrice(pnu);
+        return priceList;
     }
 
     /**
@@ -98,47 +81,49 @@ public class EstateService {
      * @param pnu
      * @return
      */
-    public List<HashMap<String, Object>> getBuldBook(String pnu) {
-        String bldrgst = getBldrgstPk(pnu);
-        List<HashMap<String, Object>> list = estateMapper.getBuldBook(pnu);
-        LOGGER.info(list);
-        return null;
+    public List<DefaultMap> getBuldBookByPnu(String pnu) {
+        List<DefaultMap> list = estateMapper.getBuldBookByPnu(pnu);
+        return list;
+    }
+
+    /**
+     * 건축물대장마스터
+     * @param bldrgstPk
+     * @return
+     */
+    public List<DefaultMap> getBuldBookByPk(String bldrgstPk) {
+        List<DefaultMap> list = estateMapper.getBuldBookByPk(bldrgstPk);
+        return list;
     }
 
     /**
      * 총괄표제부
-     * @param pnu
+     * @param bldrgstPk
      * @return
      */
-    public List<HashMap<String, Object>> getRecapTitle(String pnu) {
-        String bldrgst = getBldrgstPk(pnu);
-        List<HashMap<String, Object>> list = estateMapper.getRecapTitle(pnu);
-        LOGGER.info(list);
-        return null;
+    public List<DefaultMap> getRecapTitle(String bldrgstPk) {
+        List<DefaultMap> list = estateMapper.getRecapTitle(bldrgstPk);
+        return list;
     }
 
     /**
      * 표제부
-     * @param pnu
+     * @param bldrgstPk
      * @return
      */
-    public List<HashMap<String, Object>> getTitle(String pnu) {
-        String bldrgst = getBldrgstPk(pnu);
-        List<HashMap<String, Object>> list = estateMapper.getTitle(pnu);
-        LOGGER.info(list);
-        return null;
+    public List<DefaultMap> getTitle(String bldrgstPk) {
+        List<DefaultMap> list = estateMapper.getTitle(bldrgstPk);
+        return list;
     }
 
     /**
      * 층별현황
-     * @param pnu
+     * @param bldrgstPk
      * @return
      */
-    public List<HashMap<String, Object>> getFloor(String pnu) {
-        String bldrgst = getBldrgstPk(pnu);
-        List<HashMap<String, Object>> list = estateMapper.getFloor(pnu);
-        LOGGER.info(list);
-        return null;
+    public List<DefaultMap> getFloor(String bldrgstPk) {
+        List<DefaultMap> list = estateMapper.getFloor(bldrgstPk);
+        return list;
     }
 
     /**
@@ -146,82 +131,68 @@ public class EstateService {
      * @param pnu
      * @return
      */
-    public List<HashMap<String, Object>> getExpos(String pnu) {
-        String bldrgst = getBldrgstPk(pnu);
-        List<HashMap<String, Object>> list = estateMapper.getExpos(pnu);
-        LOGGER.info(list);
-        return null;
+    public List<DefaultMap> getExposByPnu(String pnu) {
+        List<DefaultMap> list = estateMapper.getExposByPnu(pnu);
+        return list;
     }
 
     /**
-     * 전유공용면적
-     * @param pnu
+     * 전유부
+     * @param bldrgstPk
      * @return
      */
-    public List<HashMap<String, Object>> getExposPublicArea(String pnu) {
-        String bldrgst = getBldrgstPk(pnu);
-        List<HashMap<String, Object>> list = estateMapper.getExposPublicArea(pnu);
-        LOGGER.info(list);
-        return null;
+    public List<DefaultMap> getExposByPk(String bldrgstPk) {
+        List<DefaultMap> list = estateMapper.getExposByPk(bldrgstPk);
+        return list;
     }
 
     /**
      * 부속지번현황
-     * @param pnu
+     * @param bldrgstPk
      * @return
      */
-    public List<HashMap<String, Object>> getAttachedJibun(String pnu) {
-        String bldrgst = getBldrgstPk(pnu);
-        List<HashMap<String, Object>> list = estateMapper.getAttachedJibun(pnu);
-        LOGGER.info(list);
-        return null;
+    public List<DefaultMap> getAttachedJibun(String bldrgstPk) {
+        List<DefaultMap> list = estateMapper.getAttachedJibun(bldrgstPk);
+        return list;
     }
 
     /**
      * 오수정화시설
-     * @param pnu
+     * @param bldrgstPk
      * @return
      */
-    public List<HashMap<String, Object>> getWclf(String pnu) {
-        String bldrgst = getBldrgstPk(pnu);
-        List<HashMap<String, Object>> list = estateMapper.getWclf(pnu);
-        LOGGER.info(list);
-        return null;
+    public List<DefaultMap> getWclf(String bldrgstPk) {
+        List<DefaultMap> list = estateMapper.getWclf(bldrgstPk);
+        return list;
     }
 
     /**
      * 지역지구구역현황
-     * @param pnu
+     * @param bldrgstPk
      * @return
      */
-    public List<HashMap<String, Object>> getJijigu(String pnu) {
-        String bldrgst = getBldrgstPk(pnu);
-        List<HashMap<String, Object>> list = estateMapper.getJijigu(pnu);
-        LOGGER.info(list);
-        return null;
+    public List<DefaultMap> getJijigu(String bldrgstPk) {
+        List<DefaultMap> list = estateMapper.getJijigu(bldrgstPk);
+        return list;
     }
 
     /**
      * 소유자구분현황
-     * @param pnu
+     * @param bldrgstPk
      * @return
      */
-    public List<HashMap<String, Object>> getOwner(String pnu) {
-        String bldrgst = getBldrgstPk(pnu);
-        List<HashMap<String, Object>> list = estateMapper.getOwner(pnu);
-        LOGGER.info(list);
-        return null;
+    public List<DefaultMap> getOwner(String bldrgstPk) {
+        List<DefaultMap> list = estateMapper.getOwner(bldrgstPk);
+        return list;
     }
 
     /**
      * 주택가격
-     * @param pnu
+     * @param bldrgstPk
      * @return
      */
-    public List<HashMap<String, Object>> getHousePrice(String pnu) {
-        String bldrgst = getBldrgstPk(pnu);
-        List<HashMap<String, Object>> list = estateMapper.getHousePrice(pnu);
-        LOGGER.info(list);
-        return null;
+    public List<DefaultMap> getHousePrice(String bldrgstPk) {
+        List<DefaultMap> list = estateMapper.getHousePrice(bldrgstPk);
+        return list;
     }
 }

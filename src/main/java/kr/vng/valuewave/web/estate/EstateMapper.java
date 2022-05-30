@@ -1,48 +1,48 @@
 package kr.vng.valuewave.web.estate;
 
+import kr.vng.valuewave.mvc.DefaultMap;
 import org.apache.ibatis.annotations.Mapper;
 
-import java.util.HashMap;
 import java.util.List;
 
 @Mapper
 public interface EstateMapper {
 
-    // 토지(임야)대장
-    List<HashMap<String, Object>> getLandBook(String pnu);
-    // 공시지가
-    List<HashMap<String, Object>> getOfficialLandPrice(String pnu);
-    // 표준지공시지가
-    List<HashMap<String, Object>> getOfficialLandPriceForStandard(String pnu);
-    // 공유지연명부
-    List<HashMap<String, Object>> getShareLandOwnership(String pnu);
-    // 개별주택가격
-    List<HashMap<String, Object>> getIndividualHousePrice(String pnu);
-    // 공동주택가격
-    List<HashMap<String, Object>> getApartmentHousePrice(String pnu);
+    boolean checkConnection();
 
-    // 건축물대장마스터 PK
-    String getBldrgstPk(String pnu);
+    // 토지(임야)대장
+    List<DefaultMap> getLandBook(String pnu);
+    // 공시지가
+    List<DefaultMap> getOfficialLandPrice(String pnu);
+    // 표준지공시지가
+    List<DefaultMap> getOfficialLandPriceForStandard(String pnu);
+    // 공유지연명부
+    List<DefaultMap> getShareLandOwnership(String pnu);
+    // 개별주택가격
+    List<DefaultMap> getIndividualHousePrice(String pnu);
+    // 공동주택가격
+    List<DefaultMap> getApartmentHousePrice(String pnu);
+
     // 건축물대장마스터
-    List<HashMap<String, Object>> getBuldBook(String bldrgstPk);
+    List<DefaultMap> getBuldBookByPnu(String pnu);
+    List<DefaultMap> getBuldBookByPk(String bldrgstPk);
     // 총괄표제부
-    List<HashMap<String, Object>> getRecapTitle(String bldrgstPk);
+    List<DefaultMap> getRecapTitle(String bldrgstPk);
     // 표제부
-    List<HashMap<String, Object>> getTitle(String bldrgstPk);
+    List<DefaultMap> getTitle(String bldrgstPk);
     // 층별현황
-    List<HashMap<String, Object>> getFloor(String bldrgstPk);
+    List<DefaultMap> getFloor(String bldrgstPk);
     // 전유부
-    List<HashMap<String, Object>> getExpos(String bldrgstPk);
-    // 전유공용면적
-    List<HashMap<String, Object>> getExposPublicArea(String bldrgstPk);
+    List<DefaultMap> getExposByPnu(String pnu);
+    List<DefaultMap> getExposByPk(String bldrgstPk);
     // 부속지번현황
-    List<HashMap<String, Object>> getAttachedJibun(String bldrgstPk);
+    List<DefaultMap> getAttachedJibun(String bldrgstPk);
     // 오수정화시설
-    List<HashMap<String, Object>> getWclf(String bldrgstPk);
+    List<DefaultMap> getWclf(String bldrgstPk);
     // 지역지구구역현황
-    List<HashMap<String, Object>> getJijigu(String bldrgstPk);
+    List<DefaultMap> getJijigu(String bldrgstPk);
     // 소유자구분현황
-    List<HashMap<String, Object>> getOwner(String bldrgstPk);
+    List<DefaultMap> getOwner(String bldrgstPk);
     // 주택가격
-    List<HashMap<String, Object>> getHousePrice(String bldrgstPk);
+    List<DefaultMap> getHousePrice(String bldrgstPk);
 }

@@ -40,7 +40,7 @@ public class DatasourceConfig {
         // configuration 적용 및 mapper 위치 설정 등
         sqlSessionFactory.setConfigLocation(applicationContext.getResource("classpath:mybatis/mybatis-config.xml"));
         sqlSessionFactory.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath:mybatis/mapper/**/*.xml"));
-        sqlSessionFactory.setTypeAliasesPackage("kr.vng.valuewave.web"); /*잘 작동하는지 확인*/
+        sqlSessionFactory.setTypeAliasesPackage("kr.vng.valuewave.mvc, kr.vng.valuewave.web"); /*잘 작동하는지 확인*/
         return sqlSessionFactory.getObject();
     }
 
