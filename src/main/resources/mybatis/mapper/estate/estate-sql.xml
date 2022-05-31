@@ -3,12 +3,12 @@
 <mapper namespace="kr.vng.valuewave.web.estate.EstateMapper">
 
     <!-- DB연결 확인 -->
-    <select id="checkConnection" resultType="DefaultMap">
+    <select id="checkConnection" resultType="defaultMap">
         SELECT * FROM DUAL
     </select>
 
     <!-- 토지(임야)대장-->
-    <select id="getLandBook" parameterType="string" resultType="DefaultMap">
+    <select id="getLandBook" parameterType="string" resultType="defaultMap">
         SELECT
             PNU <!-- 고유번호 -->
             ,BJD_CD <!-- 법정동코드 -->
@@ -36,7 +36,7 @@
     </select>
 
     <!-- 공시지가 -->
-    <select id="getOfficialLandPrice" parameterType="string" resultType="DefaultMap">
+    <select id="getOfficialLandPrice" parameterType="string" resultType="defaultMap">
         SELECT
         PNU <!-- 고유번호 -->
         ,BJD_CD <!-- 법정동코드 -->
@@ -55,7 +55,7 @@
     </select>
 
     <!-- 표준지공시지가 -->
-    <select id="getOfficialLandPriceForStandard" parameterType="string" resultType="DefaultMap">
+    <select id="getOfficialLandPriceForStandard" parameterType="string" resultType="defaultMap">
         SELECT
         PNU <!-- 고유번호 -->
         ,BJD_CD <!-- 법정동코드 -->
@@ -101,7 +101,7 @@
     </select>
 
     <!-- 공유지연명부 -->
-    <select id="getShareLandOwnership" parameterType="string" resultType="DefaultMap">
+    <select id="getShareLandOwnership" parameterType="string" resultType="defaultMap">
         SELECT
         PNU <!-- 고유번호 -->
         ,SHR_SEQNO <!-- 공유인일련번호 -->
@@ -118,7 +118,7 @@
     </select>
 
     <!-- 개별주택가격 -->
-    <select id="getIndividualHousePrice" parameterType="string" resultType="DefaultMap">
+    <select id="getIndividualHousePrice" parameterType="string" resultType="defaultMap">
         SELECT
             PNU <!-- 고유번호 -->
             ,BJD_CD <!-- 법정동코드 -->
@@ -144,7 +144,7 @@
     </select>
 
     <!-- 공동주택가격 -->
-    <select id="getApartmentHousePrice" parameterType="string" resultType="DefaultMap">
+    <select id="getApartmentHousePrice" parameterType="string" resultType="defaultMap">
         SELECT
             PNU <!-- 고유번호 -->
             ,BJD_CD <!-- 법정동코드 -->
@@ -191,7 +191,7 @@
     </sql>
 
     <!-- 건축물대장마스터 -->
-    <select id="getBuldBookByPnu" parameterType="string" resultType="DefaultMap">
+    <select id="getBuldBookByPnu" parameterType="string" resultType="defaultMap">
         SELECT
             DISTINCT
             A.BLDRGST_PK<!-- 관리건축물대장PK -->
@@ -250,7 +250,7 @@
         AND NOT A.REGSTR_KIND_CD = '4'
         ORDER BY PNU, REGSTR_KIND_CD, DONG_NM
     </select>
-    <select id="getBuldBookByPk" parameterType="string" resultType="DefaultMap">
+    <select id="getBuldBookByPk" parameterType="string" resultType="defaultMap">
         SELECT
             DISTINCT
             A.BLDRGST_PK<!-- 관리건축물대장PK -->
@@ -278,7 +278,7 @@
     </select>
 
     <!-- 총괄표제부 -->
-    <select id="getRecapTitle" parameterType="string" resultType="DefaultMap">
+    <select id="getRecapTitle" parameterType="string" resultType="defaultMap">
         SELECT
             DISTINCT
             A.BLDRGST_PK<!-- 관리건축물대장PK -->
@@ -345,7 +345,7 @@
     </select>
 
     <!-- 표제부 -->
-    <select id="getTitle" parameterType="string" resultType="DefaultMap">
+    <select id="getTitle" parameterType="string" resultType="defaultMap">
         SELECT
             DISTINCT
             A.BLDRGST_PK<!-- 관리건축물대장PK -->
@@ -427,7 +427,7 @@
     </select>
 
     <!-- 층별현황 -->
-    <select id="getFloor" parameterType="string" resultType="DefaultMap">
+    <select id="getFloor" parameterType="string" resultType="defaultMap">
         SELECT
             DISTINCT
             A.BLDRGST_PK
@@ -458,7 +458,7 @@
     </select>
 
     <!-- 전유부 -->
-    <select id="getExposByPnu" parameterType="string" resultType="DefaultMap">
+    <select id="getExposByPnu" parameterType="string" resultType="defaultMap">
         SELECT
             DISTINCT
             A.BLDRGST_PK <!-- 관리건축물대장PK -->
@@ -496,7 +496,7 @@
         AND B.EXPOS_PUBUSE_GB_CD = '1'
         ORDER BY C.BLD_NM, A.DONG_NM, A.FLR_GB_CD, A.FLR_NO, A.HO_NM
     </select>
-    <select id="getExposByPk" parameterType="string" resultType="DefaultMap">
+    <select id="getExposByPk" parameterType="string" resultType="defaultMap">
         SELECT
             DISTINCT
             A.BLDRGST_PK <!-- 관리건축물대장PK -->
@@ -526,7 +526,7 @@
     </select>
 
     <!-- 부속지번현황 -->
-    <select id="getAttachedJibun" parameterType="string" resultType="DefaultMap">
+    <select id="getAttachedJibun" parameterType="string" resultType="defaultMap">
         SELECT
             DISTINCT
             SGG_CD||BJD_CD||DECODE(NVL(REPR_GB_CD, '0'),'0','1','1','2')||LPAD(BUN,4,'0')||LPAD(JI,4,'0') PNU
@@ -553,7 +553,7 @@
     </select>
 
     <!-- 오수정화시설 -->
-    <select id="getWclf" parameterType="string" resultType="DefaultMap">
+    <select id="getWclf" parameterType="string" resultType="defaultMap">
         SELECT
            DISTINCT
             SGG_CD||BJD_CD||DECODE(NVL(REPR_GB_CD, '0'),'0','1','1','2')||LPAD(BUN,4,'0')||LPAD(JI,4,'0') PNU
@@ -569,7 +569,7 @@
     </select>
 
     <!-- 지역지구구역현황 -->
-    <select id="getJijigu" parameterType="string" resultType="DefaultMap">
+    <select id="getJijigu" parameterType="string" resultType="defaultMap">
         SELECT
             DISTINCT
             JIJIGU_GB_CD <!-- 지역지구구역구분코드 -->
@@ -583,7 +583,7 @@
     </select>
 
     <!-- 소유자구분현황 TODO 세움터뷰-테이블정의서 비교 필요 -->
-    <select id="getOwner" parameterType="string" resultType="DefaultMap">
+    <select id="getOwner" parameterType="string" resultType="defaultMap">
         SELECT
            DISTINCT
            B.BLDRGST_PK
@@ -597,7 +597,7 @@
     </select>
 
     <!-- 주택가격 -->
-    <select id="getHousePrice" parameterType="string" resultType="DefaultMap">
+    <select id="getHousePrice" parameterType="string" resultType="defaultMap">
         SELECT
            DISTINCT
             BASE_YMD <!-- 기준일자 -->

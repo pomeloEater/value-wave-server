@@ -8,7 +8,7 @@ import java.util.List;
 @Mapper
 public interface EstateMapper {
 
-    boolean checkConnection();
+    DefaultMap checkConnection();
 
     // 토지(임야)대장
     List<DefaultMap> getLandBook(String pnu);

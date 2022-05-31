@@ -5,7 +5,7 @@
 <mapper namespace="kr.vng.valuewave.web.jusoro.JusoroMapper">
 
     <!-- DB 연결 확인 -->
-    <select id="checkConnection" resultType="hashMap">
+    <select id="checkConnection" resultType="defaultMap">
         SELECT * FROM DUAL
     </select>
 
