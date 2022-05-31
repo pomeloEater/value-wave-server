@@ -17,6 +17,20 @@ public class EstateService {
     private static final Logger LOGGER = LogManager.getLogger(EstateService.class);
 
     /**
+     * DB 커넥셕 확인
+     * @return boolean 확인여부
+     */
+    public boolean checkConnection() {
+        try {
+            estateMapper.checkConnection();
+            return true;
+        } catch (Exception e) {
+            LOGGER.error(e.getStackTrace());
+            return false;
+        }
+    }
+
+    /**
      * 토지(임야)대장
      * @param pnu
      * @return

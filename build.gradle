@@ -80,6 +80,7 @@ tasks.named('assembleFrontend') {
             from "${projectDir}/frontend/build"
             into "${projectDir}/src/main/resources/static"
         }
+        println "Copy from frontend to resources"
     }
 }
 

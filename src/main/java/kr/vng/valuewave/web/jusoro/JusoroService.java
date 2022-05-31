@@ -42,6 +42,7 @@ public class JusoroService {
             jusoroMapper.checkConnection();
             return true;
         } catch (Exception e) {
+            LOGGER.error(e.getStackTrace());
             return false;
         }
     }
@@ -123,20 +124,22 @@ public class JusoroService {
         JusoroPayload searchResult = searchAddressBySolution(keyword, currentPage);
         // 검색 정보 가져오기
         Common common = searchResult.getResults().getCommon();
-        LOGGER.info(common);
         if (!"0".equals(common.getErrorCode())) {
+            LOGGER.info("JUSORO ERROR | {}", common.getErrorMessage());
             return searchResult;
         }
 
         // 검색 결과 가져오기
         List<Juso> jusoList = searchResult.getResults().getJuso();
         if (jusoList.size() == 0) {
+            LOGGER.info("JUSORO ERROR | NO JUSO LIST");
             return searchResult;
         }
 
         // DB 연결 확인
         boolean isConnected = checkConnection();
         if (!isConnected) {
+            LOGGER.error("JUSORO ERROR | NO DB CONNECTION");
             return searchResult;
         }
 
