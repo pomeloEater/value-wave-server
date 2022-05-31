@@ -182,9 +182,10 @@
                 THEN '(' || HEMD_NM || ', ' || BD_NM || ')'
                 ELSE '(' || HEMD_NM || ')' END)
         FROM LNT_ENTRC_KA
-        WHERE SGG_CD = A.SGG_CD
-            AND RN_MGT_SN = A.NA_ROAD_CD
-            AND BJD_CD = A.BJD_CD
+        WHERE RN_MGT_SN = A.NA_ROAD_CD
+            AND UDRT_YN = A.NA_UGRND_CD
+            AND BULD_MNNM = A.NA_MAIN_BUN
+            AND BULD_SLNO = A.NA_SUB_BUN
             AND ROWNUM = 1
         )
     </sql>
@@ -336,7 +337,7 @@
             ,B.USEAPR_DAY<!-- 사용승인일 -->
             ,CASE WHEN B.PMSNO_YEAR IS NOT NULL
                   THEN B.PMSNO_YEAR||'-'||B.PMSNO_KIK_NM||'-'||PMSNO_GB_NM
-                  ELSE NULL ENDAS PMSRGST_INFO<!--허가번호: SEQ가 없음-->
+                  ELSE NULL END AS PMSRGST_INFO<!--허가번호: SEQ가 없음-->
         FROM DJRBLDRGST A
         INNER JOIN DJRRECAPTITLE B ON A.BLDRGST_PK = B.BLDRGST_PK
         WHERE A.BLDRGST_PK = #{bldrgstPk}
@@ -416,7 +417,9 @@
             ,B.INTL_BLDG_SOCRE<!-- 지능형건축물인증점수 -->
             ,B.ERS_YN<!-- 내진설계적용여부 -->
             ,B.ERS_CAPA<!-- 내진능력 -->
-            ,B.PMSNO_YEAR||'-'||B.PMSNO_KIK_NM||'-'||PMSNO_GB_NM AS PMSRGST_INFO<!--허가번호: SEQ가 없음-->
+            ,CASE WHEN B.PMSNO_YEAR IS NOT NULL
+                  THEN B.PMSNO_YEAR||'-'||B.PMSNO_KIK_NM||'-'||PMSNO_GB_NM
+                  ELSE NULL END AS PMSRGST_INFO<!--허가번호: SEQ가 없음-->
         FROM DJRBLDRGST A
         INNER JOIN DJRTITLE B ON A.BLDRGST_PK = B.BLDRGST_PK
         WHERE A.BLDRGST_PK = #{bldrgstPk}
