@@ -1,0 +1,11 @@
+log4jdbc:
+  spylogdelegator:
+    name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+  dump:
+    sql:
+      maxlinelength: 0
+  drivers: oracle.jdbc.OracleDriver # log4jdbc의 드라이브 클래스 설정
+  auto:
+    load:
+      popular:
+        drivers: false # 드라이버를 자동으로 로드하지 않도록 false로 지정

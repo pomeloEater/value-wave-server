@@ -1,25 +1,25 @@
 package kr.vng.valuewave.config;
 
 import kr.vng.valuewave.config.prop.GlobalPropertySource;
+import lombok.RequiredArgsConstructor;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.DataSourceBuilder;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.*;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
 
+@RequiredArgsConstructor
 @Configuration
+@DependsOn(value = {"globalPropertySource"})
 @EnableTransactionManagement
 public class DatasourceConfig {
 
-    @Autowired
-    GlobalPropertySource globalPropertySource;
+    private final GlobalPropertySource globalPropertySource;
 
     @Bean
     @Primary
@@ -34,17 +34,18 @@ public class DatasourceConfig {
     }
 
     @Bean
-    public SqlSessionFactory sqlSessionFactory(DataSource customDataSource) throws Exception {
+    public SqlSessionFactory sqlSessionFactory(DataSource customDataSource, ApplicationContext applicationContext) throws Exception {
         final SqlSessionFactoryBean sqlSessionFactory = new SqlSessionFactoryBean();
-        sqlSessionFactory.setDataSource(customDataSource());
-        PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
-//        sqlSessionFactory.setMapperLocations(resolver.getResources("classpath:mybatis/mapper/*.xml"));
+        sqlSessionFactory.setDataSource(customDataSource);
+        // configuration 적용 및 mapper 위치 설정 등
+        sqlSessionFactory.setConfigLocation(applicationContext.getResource("classpath:mybatis/mybatis-config.xml"));
+        sqlSessionFactory.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath:mybatis/mapper/**/*.xml"));
+        sqlSessionFactory.setTypeAliasesPackage("kr.vng.valuewave.mvc, kr.vng.valuewave.web"); /*잘 작동하는지 확인*/
         return sqlSessionFactory.getObject();
     }
 
     @Bean
     public SqlSessionTemplate sqlSessionTemplate(SqlSessionFactory sqlSessionFactory) throws Exception {
-        final SqlSessionTemplate sqlSessionTemplate = new SqlSessionTemplate(sqlSessionFactory);
-        return sqlSessionTemplate;
+        return new SqlSessionTemplate(sqlSessionFactory);
     }
 }

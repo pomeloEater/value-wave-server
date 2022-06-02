@@ -35,6 +35,7 @@ dependencies {
     // logging
     implementation 'org.springframework.boot:spring-boot-starter-log4j2' // log4j2
     implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.13.2'
+    implementation 'org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4.1:1.16'
 
     //test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -43,12 +44,14 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
     implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.2'
     implementation 'com.oracle.database.jdbc:ojdbc8:21.5.0.0'
+    implementation 'com.oracle.ojdbc:orai18n:19.3.0.0'
 
     // http connection
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
 
     // java.lang utility
     implementation 'org.apache.commons:commons-lang3:3.12.0'
+    implementation 'com.google.guava:guava:31.1-jre'
 
 }
 
@@ -57,7 +60,7 @@ tasks.named('test') {
 }
 
 frontend {
-    nodeDistributionProvided = false
+    nodeDistributionProvided = true // node 설치 이전: false, 이후에는 true로 installNode 과정 통과
     nodeVersion = '16.15.0'
     nodeDistributionUrlRoot = 'https://nodejs.org/dist/'
     nodeInstallDirectory = file("${projectDir}/node")
@@ -78,9 +81,14 @@ tasks.named('assembleFrontend') {
             from "${projectDir}/frontend/build"
             into "${projectDir}/src/main/resources/static"
         }
+        println "Copy from frontend to resources"
     }
 }
 
 clean.doFirst {
     delete "${projectDir}/src/main/resources/static/"
+}
+
+jar {
+    enabled = false
 }

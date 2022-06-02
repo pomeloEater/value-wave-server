@@ -13,4 +13,8 @@ spring:
       enabled: true
 
 logging:
-  config: classpath:log4j2.yml
+  config: classpath:log4j2.xml
+  level:
+    web: debug
+
+#  mybatis.configuration: # DatasourceConfig.java에서 설정함

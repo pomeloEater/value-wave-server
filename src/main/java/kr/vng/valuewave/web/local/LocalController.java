@@ -1,30 +1,21 @@
 package kr.vng.valuewave.web.local;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import kr.vng.valuewave.utils.ResultMapUtil;
 import kr.vng.valuewave.web.local.model.LocalPayload;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 /**
  * 카카오 로컬 API Controller
  */
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/local")
 public class LocalController {
 
-    public LocalService localService;
-
-    @Autowired
-    public LocalController(LocalService localService) {
-        this.localService = localService;
-    }
-
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
+    public final LocalService localService;
 
     /**
      * 주소 검색하기
@@ -37,10 +28,11 @@ public class LocalController {
     public Object searchAddress(@PathVariable String address,
                                 @RequestParam(required = false) Optional<Integer> page) {
         int pageNum = page.orElse(1);
-        Map resultMap = new HashMap();
-        resultMap.putAll(payloadToMap(localService.searchAddress(address, pageNum)));
-        resultMap.put("result", "success"); // TODO ResultMapUtil ?
-        return resultMap;
+        LocalPayload result = localService.searchAddress(address, pageNum);
+        if (result.getDocuments().size() == 0) {
+            return ResultMapUtil.failed();
+        }
+        return ResultMapUtil.success(result);
     }
 
     /**
@@ -55,11 +47,12 @@ public class LocalController {
     public Object getRegion(@PathVariable String x,
                             @PathVariable String y,
                             @RequestParam(required = false) Optional<String> inputCoord) {
-        String coordSystem = inputCoord.orElse("WGS84");
-        Map resultMap = new HashMap();
-        resultMap.putAll(payloadToMap(localService.getRegion(x, y, coordSystem)));
-        resultMap.put("result", "success");
-        return resultMap;
+        String coordSystem = inputCoord.orElse("WGS84"); // 좌표계
+        LocalPayload result = localService.getRegion(x, y, coordSystem);
+        if (result.getDocuments().size() == 0) {
+            return ResultMapUtil.failed();
+        }
+        return ResultMapUtil.success(result);
     }
 
     /**
@@ -74,11 +67,12 @@ public class LocalController {
     public Object getAddress(@PathVariable String x,
                              @PathVariable String y,
                              @RequestParam(required = false) Optional<String> inputCoord) {
-        String coordSystem = inputCoord.orElse("WGS84");
-        Map resultMap = new HashMap();
-        resultMap.putAll(payloadToMap(localService.getAddress(x, y, coordSystem)));
-        resultMap.put("result", "success");
-        return resultMap;
+        String coordSystem = inputCoord.orElse("WGS84"); // 좌표계
+        LocalPayload address = localService.getAddress(x, y, coordSystem);
+        if (address.getDocuments().size() == 0) {
+            return ResultMapUtil.failed();
+        }
+        return ResultMapUtil.success(address);
     }
 
     /**
@@ -93,13 +87,11 @@ public class LocalController {
     public Object getPnuCode(@PathVariable String x,
                              @PathVariable String y,
                              @RequestParam(required = false) Optional<String> inputCoord) {
-        String coordSystem = inputCoord.orElse("WGS84");
-        Map resultMap = new HashMap();
-        resultMap.put("pnu",localService.getPnuCode(x, y, coordSystem));
-        return resultMap;
-    }
-
-    public Map payloadToMap(LocalPayload localPayload) {
-        return OBJECT_MAPPER.convertValue(localPayload, Map.class);
+        String coordSystem = inputCoord.orElse("WGS84"); // 좌표계
+        String pnu = localService.getPnuCode(x, y, coordSystem); // PNU 코드
+        if (pnu.length() != 19) {
+            return ResultMapUtil.failed();
+        }
+        return ResultMapUtil.success(pnu);
     }
 }
