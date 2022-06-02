@@ -1,0 +1,611 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.vng.valuewave.web.estate.EstateMapper">
+
+    <!-- DB연결 확인 -->
+    <select id="checkConnection" resultType="defaultMap">
+        SELECT * FROM DUAL
+    </select>
+
+    <!-- 토지(임야)대장-->
+    <select id="getLandBook" parameterType="string" resultType="defaultMap">
+        SELECT
+            PNU <!-- 고유번호 -->
+            ,BJD_CD <!-- 법정동코드 -->
+            ,BJD_NM <!-- 법정동명 -->
+            ,JIBUN <!-- 지번 -->
+            ,CASE WHEN INSTR(JIBUN, '-', 1, 1) > 0
+                THEN SUBSTR(JIBUN, 0, INSTR(JIBUN, '-', 1, 1))
+                ELSE JIBUN END AS BULD_MNNM<!-- 건물본번 -->
+            ,CASE WHEN INSTR(JIBUN, '-', 1, 1) > 0
+                THEN SUBSTR(JIBUN, INSTR(JIBUN, '-', 1, 1))
+                ELSE '' END AS BULD_SLNO<!-- 건물부번 -->
+            ,LEDG_GBN_CD <!-- 특수지구분코드 -->
+            ,LEDG_GBN <!-- 특수지구분명 -->
+            ,JIMOK_CD <!-- 지목코드 -->
+            ,JIMOK_NM <!-- 지목명 -->
+            ,PAREA <!-- 면적 -->
+            ,OWN_GBN_CD <!-- 소유구분코드 -->
+            ,OWN_GBN <!-- 소유구분명 -->
+            ,SHR_CNT <!-- 공유인수 -->
+            ,SCALE_CD <!-- 축척구분코드 -->
+            ,SCALE <!-- 축척구분명 -->
+            ,DATA_YMD <!-- 데이터기준일자 -->
+        FROM ABPM_LAND_FRST_LEDG
+        WHERE PNU = #{pnu}
+    </select>
+
+    <!-- 공시지가 -->
+    <select id="getOfficialLandPrice" parameterType="string" resultType="defaultMap">
+        SELECT
+        PNU <!-- 고유번호 -->
+        ,BJD_CD <!-- 법정동코드 -->
+        ,BJD_NM <!-- 법정동명 -->
+        ,LEDG_GBN_CD <!-- 특수지구분코드 -->
+        ,LEDG_GBN <!-- 특수지구분명 -->
+        ,JIBUN <!-- 지번 -->
+        ,BASE_YEAR <!-- 기준년도 -->
+        ,STMDT <!-- 기준월 -->
+        ,JIGA <!-- 공시지가 -->
+        ,JIGA_YMD <!-- 공시일자 -->
+        ,STD_YN <!-- 표준여부 -->
+        ,DATA_YMD <!-- 데이터기준일자 -->
+        FROM APMM_NV_JIGA_MNG
+        WHERE PNU = #{pnu}
+        ORDER BY BASE_YEAR DESC, STMDT DESC
+    </select>
+
+    <!-- 표준지공시지가 -->
+    <select id="getOfficialLandPriceForStandard" parameterType="string" resultType="defaultMap">
+        SELECT
+        PNU <!-- 고유번호 -->
+        ,BJD_CD <!-- 법정동코드 -->
+        ,BJD_NM <!-- 법정동명 -->
+        ,LEDG_GBN_CD <!-- 특수지구분코드 -->
+        ,LEDG_GBN <!-- 특수지구분명 -->
+        ,JIBUN <!-- 지번 -->
+        ,PJJI_SEQNO <!-- 표준지일련번호 -->
+        ,BASE_YEAR <!-- 기준년도 -->
+        ,BSIN_AREA <!-- 사업지구면적 -->
+        ,JIMOK_CD <!-- 지목코드 -->
+        ,JIMOK_NM <!-- 지목명 -->
+        ,ACTL_JIMOK_CD <!-- 실제지목코드 -->
+        ,ACTL_JIMOK <!-- 실제지목명 -->
+        ,PAREA <!-- 면적 -->
+        ,SPFC1 <!-- 용도지역1 -->
+        ,SPFC1_NM <!-- 용도지역1명 -->
+        ,SPFC2 <!-- 용도지역2 -->
+        ,SPFC2_NM <!-- 용도지역2명 -->
+        ,SPCFC1 <!-- 용도지구1 -->
+        ,SPCFC1_NM <!-- 용도지구1명 -->
+        ,SPCFC2 <!-- 용도지구2 -->
+        ,SPCFC2_NM <!-- 용도지구2명 -->
+        ,CFLT_RT <!-- 저촉율 -->
+        ,LAND_USE <!-- 토지이용상황 -->
+        ,LAND_USE_NM <!-- 토지이용상황명 -->
+        ,GEO_HL <!-- 지형고저 -->
+        ,GEO_HL_NM <!-- 지형고저명 -->
+        ,GEO_FORM <!-- 지형형상 -->
+        ,GEO_FORM_NM <!-- 지형형상명 -->
+        ,ROAD_SIDE <!-- 도로접면 -->
+        ,ROAD_SIDE_NM <!-- 도로접면명 -->
+        ,ROAD_DIST <!-- 도로거리 -->
+        ,ROAD_DIST_NM <!-- 도로거리명 -->
+        ,PNILP <!-- 개별공시지가 -->
+        ,OWN_GBN <!-- 소유구분 -->
+        ,OWN_GBN_NM <!-- 소유구분명 -->
+        ,OWN_TYPE <!-- 소유형태 -->
+        ,OWN_TYPE_NM <!-- 소유형태명 -->
+        ,DATA_YMD <!-- 데이터기준일자 -->
+        FROM APMM_NV_PJJI
+        WHERE PNU = #{pnu}
+    </select>
+
+    <!-- 공유지연명부 -->
+    <select id="getShareLandOwnership" parameterType="string" resultType="defaultMap">
+        SELECT
+        PNU <!-- 고유번호 -->
+        ,SHR_SEQNO <!-- 공유인일련번호 -->
+        ,BJD_CD <!-- 법정동코드 -->
+        ,BJD_NM <!-- 법정동명 -->
+        ,JIBUN <!-- 지번 -->
+        ,LEDG_GBN_CD <!-- 특수지구분코드 -->
+        ,LEDG_GBN <!-- 특수지구분명 -->
+        ,OWN_GBN <!-- 소유구분 -->
+        ,OWN_GBN_NM <!-- 소유구분명 -->
+        ,DATA_YMD <!-- 데이터기준일자 -->
+        FROM ABPD_SHR_YMB
+        WHERE PNU = #{pnu}
+    </select>
+
+    <!-- 개별주택가격 -->
+    <select id="getIndividualHousePrice" parameterType="string" resultType="defaultMap">
+        SELECT
+            PNU <!-- 고유번호 -->
+            ,BJD_CD <!-- 법정동코드 -->
+            ,BJD_NM <!-- 법정동명 -->
+            ,LEDG_GBN_CD <!-- 특수지구분코드 -->
+            ,LEDG_GBN <!-- 특수지구분명 -->
+            ,JIBUN <!-- 지번 -->
+            ,BILD_REGSTR_UNQNO <!-- 건축물고유번호 -->
+            ,BASE_YEAR <!-- 기준년도 -->
+            ,STMDT <!-- 기준월 -->
+            ,DONG_CD <!-- 동코드 -->
+            ,DONG_NM <!-- 동명 -->
+            ,LNDBUK_AREA <!-- 토지대장면적 -->
+            ,CALC_LAREA <!-- 산정대지면적 -->
+            ,HPRC_GAREA <!-- 건물전체연면적 -->
+            ,RES_AREA <!-- 건물산정연면적 -->
+            ,POTVALE <!-- 주택가격 -->
+            ,PJJI_YN <!-- 표준지여부 -->
+            ,DATA_YMD <!-- 데이터기준일자 -->
+        FROM APMM_HP_PRC_MNG
+        WHERE PNU = #{pnu}
+        ORDER BY BASE_YEAR DESC, STMDT DESC
+    </select>
+
+    <!-- 공동주택가격 -->
+    <select id="getApartmentHousePrice" parameterType="string" resultType="defaultMap">
+        SELECT
+            PNU <!-- 고유번호 -->
+            ,BJD_CD <!-- 법정동코드 -->
+            ,BJD_NM <!-- 법정동명 -->
+            ,LEDG_GBN_CD <!-- 특수지구분코드 -->
+            ,LEDG_GBN <!-- 특수지구분명 -->
+            ,JIBUN <!-- 지번 -->
+            ,BASE_YEAR <!-- 기준년도 -->
+            ,STMDT <!-- 기준월 -->
+            ,APT_CODE <!-- 공동주택코드 -->
+            ,APT_TYPE <!-- 공동주택구분코드 -->
+            ,APT_TYPE_NM <!-- 공동주택구분명 -->
+            ,SPLOT_NM <!-- 특수지명 -->
+            ,APT_NM <!-- 공동주택명 -->
+            ,DONG_NM <!-- 동명 -->
+            ,FRL_NM <!-- 층명 -->
+            ,HO_NM <!-- 호명 -->
+            ,PRIV_AREA <!-- 전용면적 -->
+            ,NOTICE_AMT <!-- 공시가격 -->
+            ,DATA_YMD <!-- 데이터기준일자 -->
+        FROM CO_AP_PRC
+        WHERE PNU = #{pnu}
+        ORDER BY BASE_YEAR DESC, STMDT, DONG_NM, FRL_NM, HO_NM
+    </select>
+
+
+    <!-- 도로명주소: 위치정보요약 -->
+    <sql id="roadAddr">
+        (SELECT
+            SI_NM || ' ' || SGG_NM || ' ' || EMD_NM || ' ' || RN || ' ' ||
+            (CASE WHEN UDRT_YN = '1' THEN '지하 ' ELSE '' END) ||
+            BULD_MNNM ||
+            (CASE WHEN NVL(BULD_SLNO, '0') = '0' THEN '' ELSE '-' || BULD_SLNO END) ||
+            (CASE WHEN BD_NM IS NOT NULL
+                THEN '(' || HEMD_NM || ', ' || BD_NM || ')'
+                ELSE '(' || HEMD_NM || ')' END)
+        FROM LNT_ENTRC_KA
+        WHERE RN_MGT_SN = A.NA_ROAD_CD
+            AND UDRT_YN = A.NA_UGRND_CD
+            AND BULD_MNNM = A.NA_MAIN_BUN
+            AND BULD_SLNO = A.NA_SUB_BUN
+            AND ROWNUM = 1
+        )
+    </sql>
+
+    <!-- 건축물대장마스터 -->
+    <select id="getBuldBookByPnu" parameterType="string" resultType="defaultMap">
+        SELECT
+            DISTINCT
+            A.BLDRGST_PK<!-- 관리건축물대장PK -->
+            ,<include refid="roadAddr"/> AS ROAD_ADDR<!-- 도로명주소 -->
+            ,A.SGG_CD || A.BJD_CD || DECODE(NVL(A.REPR_GB_CD, '0'),'0','1','1','2') || LPAD(A.BUN,4,'0') || LPAD(A.JI,4,'0') AS PNU
+            ,A.BLD_NM
+            ,CASE WHEN A.REGSTR_KIND_CD = '1' THEN NULL ELSE C.DONG_NM END DONG_NM
+            ,A.REGSTR_GB_CD
+            ,A.REGSTR_GB_NM<!-- 대장구분명 -->
+            ,CASE WHEN A.REGSTR_KIND_CD='1' THEN B.USEAPR_DAY ELSE C.USEAPR_DAY END USEAPR_DAY<!-- 사용승인일 -->
+            ,CASE WHEN A.REGSTR_KIND_CD='1' THEN B.TOTAREA ELSE C.TOTAREA END TOTAREA<!-- 연면적 -->
+            ,CASE WHEN A.REGSTR_KIND_CD='1' THEN B.MAIN_PURPS_CD ELSE C.MAIN_PURPS_CD END MAIN_PURPS_CD
+            ,CASE WHEN A.REGSTR_KIND_CD='1' THEN B.MAIN_PURPS_NM ELSE C.MAIN_PURPS_NM END MAIN_PURPS_NM<!-- 주용도명 -->
+            ,CASE WHEN A.REGSTR_KIND_CD='1' THEN NULL ELSE C.MAIN_ATCH_GB_CD END MAIN_ATCH_GB_CD
+            ,CASE WHEN A.REGSTR_KIND_CD='1' THEN NULL ELSE C.MAIN_ATCH_GB_NM END MAIN_ATCH_GB_NM<!-- 주부속구분명 -->
+            ,A.REGSTR_KIND_CD
+            ,A.REGSTR_KIND_NM<!-- 대장종류명 -->
+        FROM DJRBLDRGST A
+        LEFT JOIN DJRRECAPTITLE B ON (A.BLDRGST_PK = B.BLDRGST_PK)
+        LEFT JOIN DJRTITLE C ON (A.BLDRGST_PK = C.BLDRGST_PK)
+        WHERE
+            A.SGG_CD = SUBSTR(#{pnu}, 1, 5)
+            AND A.BJD_CD = SUBSTR(#{pnu}, 6, 5)
+            AND NVL(A.REPR_GB_CD, '0') = DECODE(SUBSTR(#{pnu}, 11, 1), '1', '0', '2', '1')
+            AND A.BUN = SUBSTR(#{pnu}, 12, 4)
+            AND A.JI = SUBSTR(#{pnu}, 16, 4)
+            AND NOT A.REGSTR_KIND_CD = '4'
+        UNION ALL
+        SELECT
+            A.BLDRGST_PK<!-- 관리건축물대장PK -->
+            ,<include refid="roadAddr"/> AS ROAD_ADDR<!-- 도로명주소 -->
+            ,A.SGG_CD || A.BJD_CD || DECODE(NVL(A.REPR_GB_CD, '0'),'0','1','1','2') || LPAD(A.BUN,4,'0') || LPAD(A.JI,4,'0') AS PNU
+            ,A.BLD_NM
+            ,CASE WHEN A.REGSTR_KIND_CD = '1' THEN NULL ELSE C.DONG_NM END DONG_NM
+            ,A.REGSTR_GB_CD
+            ,A.REGSTR_GB_NM<!-- 대장구분명 -->
+            ,CASE WHEN A.REGSTR_KIND_CD='1' THEN B.USEAPR_DAY ELSE C.USEAPR_DAY END USEAPR_DAY<!-- 사용승인일 -->
+            ,CASE WHEN A.REGSTR_KIND_CD='1' THEN B.TOTAREA ELSE C.TOTAREA END TOTAREA<!-- 연면적 -->
+            ,CASE WHEN A.REGSTR_KIND_CD='1' THEN B.MAIN_PURPS_CD ELSE C.MAIN_PURPS_CD END MAIN_PURPS_CD
+            ,CASE WHEN A.REGSTR_KIND_CD='1' THEN B.MAIN_PURPS_NM ELSE C.MAIN_PURPS_NM END MAIN_PURPS_NM<!-- 주용도명 -->
+            ,CASE WHEN A.REGSTR_KIND_CD='1' THEN NULL ELSE C.MAIN_ATCH_GB_CD END MAIN_ATCH_GB_CD
+            ,CASE WHEN A.REGSTR_KIND_CD='1' THEN NULL ELSE C.MAIN_ATCH_GB_NM END MAIN_ATCH_GB_NM<!-- 주부속구분명 -->
+            ,A.REGSTR_KIND_CD
+            ,A.REGSTR_KIND_NM<!-- 대장종류명 -->
+        FROM DJRBLDRGST A
+        LEFT JOIN DJRRECAPTITLE B ON (A.BLDRGST_PK = B.BLDRGST_PK)
+        LEFT JOIN DJRTITLE C ON (A.BLDRGST_PK = C.BLDRGST_PK)
+        WHERE A.BLDRGST_PK IN (
+            SELECT BLDRGST_PK FROM DJRATCHJIBUN
+            WHERE SGG_CD = SUBSTR(#{pnu}, 1, 5)
+            AND BJD_CD = SUBSTR(#{pnu}, 6, 5)
+            AND NVL(REPR_GB_CD, '0') = DECODE(SUBSTR(#{pnu}, 11, 1), '1', '0', '2', '1')
+            AND BUN = SUBSTR(#{pnu}, 12, 4)
+            AND JI = SUBSTR(#{pnu}, 16, 4)
+        )
+        AND NOT A.REGSTR_KIND_CD = '4'
+        ORDER BY PNU, REGSTR_KIND_CD, DONG_NM
+    </select>
+    <select id="getBuldBookByPk" parameterType="string" resultType="defaultMap">
+        SELECT
+            DISTINCT
+            A.BLDRGST_PK<!-- 관리건축물대장PK -->
+            ,<include refid="roadAddr"/> AS ROAD_ADDR<!-- 도로명주소 -->
+            ,A.SGG_CD || A.BJD_CD || DECODE(NVL(A.REPR_GB_CD, '0'),'0','1','1','2') || LPAD(A.BUN,4,'0') || LPAD(A.JI,4,'0') AS PNU
+            ,A.BLD_NM
+            ,CASE WHEN A.REGSTR_KIND_CD = '1' THEN NULL ELSE C.DONG_NM END DONG_NM
+            ,A.REGSTR_GB_CD
+            ,A.REGSTR_GB_NM<!-- 대장구분명 -->
+            ,CASE WHEN A.REGSTR_KIND_CD='1' THEN B.USEAPR_DAY ELSE C.USEAPR_DAY END USEAPR_DAY<!-- 사용승인일 -->
+            ,CASE WHEN A.REGSTR_KIND_CD='1' THEN B.TOTAREA ELSE C.TOTAREA END TOTAREA<!-- 연면적 -->
+            ,CASE WHEN A.REGSTR_KIND_CD='1' THEN B.MAIN_PURPS_CD ELSE C.MAIN_PURPS_CD END MAIN_PURPS_CD
+            ,CASE WHEN A.REGSTR_KIND_CD='1' THEN B.MAIN_PURPS_NM ELSE C.MAIN_PURPS_NM END MAIN_PURPS_NM<!-- 주용도명 -->
+            ,CASE WHEN A.REGSTR_KIND_CD='1' THEN NULL ELSE C.MAIN_ATCH_GB_CD END MAIN_ATCH_GB_CD
+            ,CASE WHEN A.REGSTR_KIND_CD='1' THEN NULL ELSE C.MAIN_ATCH_GB_NM END MAIN_ATCH_GB_NM<!-- 주용도명 -->
+            ,A.REGSTR_KIND_CD
+            ,A.REGSTR_KIND_NM<!-- 대장종류명 -->
+        FROM DJRBLDRGST A
+        LEFT JOIN DJRRECAPTITLE B ON (A.BLDRGST_PK = B.BLDRGST_PK)
+        LEFT JOIN DJRTITLE C ON (A.BLDRGST_PK = C.BLDRGST_PK)
+        WHERE
+        A.BLDRGST_PK = #{bldrgstPk}
+        AND NOT A.REGSTR_KIND_CD = '4'
+        ORDER BY PNU, REGSTR_KIND_CD, DONG_NM
+    </select>
+
+    <!-- 총괄표제부 -->
+    <select id="getRecapTitle" parameterType="string" resultType="defaultMap">
+        SELECT
+            DISTINCT
+            A.BLDRGST_PK<!-- 관리건축물대장PK -->
+            ,<include refid="roadAddr"/> AS ROAD_ADDR
+            ,A.SGG_CD || A.BJD_CD || DECODE(NVL(A.REPR_GB_CD, '0'),'0','1','1','2') || LPAD(A.BUN,4,'0') || LPAD(A.JI,4,'0') AS PNU
+            ,A.UPPER_BLDRGST_PK<!-- 관리상위건축물대장PK -->
+            ,A.BLD_NM<!-- 건물명 -->
+            ,A.SGG_CD<!-- 시군구코드 -->
+            ,A.BJD_CD<!-- 법정동코드 -->
+            ,NVL(A.REPR_GB_CD, '0') AS REPR_GB_CD<!-- 대지구분코드 -->
+            ,A.BUN<!-- 번 -->
+            ,A.JI<!-- 지 -->
+            ,A.SPLOT_NM<!-- 특수지명 -->
+            ,A.BLOCK<!-- 블록 -->
+            ,A.LOT<!-- 로트 -->
+            ,A.BYLOT_CNT<!-- 외필지수 -->
+            ,A.RGN_CD<!-- 지역코드 -->
+            ,A.JIGU_CD<!-- 지구코드 -->
+            ,A.ZONE_CD<!-- 구역코드 -->
+            ,A.RGN_NM<!-- 지역명 -->
+            ,A.JIGU_NM<!-- 지구명 -->
+            ,A.ZONE_NM<!-- 구역명 -->
+            ,B.PLAT_AREA<!-- 대지면적 -->
+            ,B.ARCH_AREA<!-- 건축면적 -->
+            ,B.BC_RAT<!-- 건폐율 -->
+            ,B.TOTAREA<!-- 연면적 -->
+            ,B.VL_RAT_ESTM_TOTAREA<!-- 용적률산정연면적 -->
+            ,B.VL_RAT<!-- 용적률 -->
+            ,B.MAIN_PURPS_CD<!-- 주용도코드 -->
+            ,B.MAIN_PURPS_NM<!-- 주용도명 -->
+            ,B.ETC_PURPS<!-- 기타용도 -->
+            ,B.HHLD_CNT<!-- 세대수 -->
+            ,B.FMLY_CNT<!-- 가구수 -->
+            ,B.MAIN_BLD_CNT<!-- 주건축물수 -->
+            ,B.ATCH_BLD_CNT<!-- 부속건축물수 -->
+            ,B.ATCH_BLD_AREA<!-- 부속건축물면적 -->
+            ,B.TOT_PKNG_CNT<!-- 총주차수 -->
+            ,B.INDR_MECH_UTCNT<!-- 옥내기계식대수 -->
+            ,B.INDR_MECH_AREA<!-- 옥내기계식면적 -->
+            ,B.OUDR_MECH_UTCNT<!-- 옥외기계식대수 -->
+            ,B.OUDR_MECH_AREA<!-- 옥외기계식면적 -->
+            ,B.INDR_AUTO_UTCNT<!-- 옥내자주식대수 -->
+            ,B.INDR_AUTO_AREA<!-- 옥내자주식면적 -->
+            ,B.OUDR_AUTO_UTCNT<!-- 옥외자주식대수 -->
+            ,B.OUDR_AUTO_AREA<!-- 옥외자주식면적 -->
+            ,B.PMSNO_YMD<!-- 허가일 -->
+            ,B.STCNS_DAY<!-- 착공일 -->
+            ,B.HO_CNT<!-- 호수 -->
+            ,B.ENGY_EFF_GRADE<!-- 에너지효율등급 -->
+            ,B.ENGY_RDC_RATE<!-- 에너지절감율 -->
+            ,B.ENGY_EPI_SCORE<!-- 에너지EPI점수 -->
+            ,B.ENV_BLDG_GRADE<!-- 친환경건축물등급 -->
+            ,B.ENV_BLDG_SCORE<!-- 친환경건축물인증점수 -->
+            ,B.INTL_BLDG_GRADE<!-- 지능형건축물등급 -->
+            ,B.INTL_BLDG_SCORE<!-- 지능형건축물인증점수 -->
+            ,B.USEAPR_DAY<!-- 사용승인일 -->
+            ,CASE WHEN B.PMSNO_YEAR IS NOT NULL
+                  THEN B.PMSNO_YEAR||'-'||B.PMSNO_KIK_NM||'-'||PMSNO_GB_NM
+                  ELSE NULL END AS PMSRGST_INFO<!--허가번호: SEQ가 없음-->
+        FROM DJRBLDRGST A
+        INNER JOIN DJRRECAPTITLE B ON A.BLDRGST_PK = B.BLDRGST_PK
+        WHERE A.BLDRGST_PK = #{bldrgstPk}
+            AND ROWNUM = 1
+    </select>
+
+    <!-- 표제부 -->
+    <select id="getTitle" parameterType="string" resultType="defaultMap">
+        SELECT
+            DISTINCT
+            A.BLDRGST_PK<!-- 관리건축물대장PK -->
+            ,<include refid="roadAddr"/> AS ROAD_ADDR
+            ,A.SGG_CD || A.BJD_CD || DECODE(NVL(A.REPR_GB_CD, '0'),'0','1','1','2') || LPAD(A.BUN,4,'0') || LPAD(A.JI,4,'0') AS PNU
+            ,A.UPPER_BLDRGST_PK<!-- 관리상위건축물대장PK -->
+            ,A.BLD_NM<!-- 건물명 -->
+            ,A.SGG_CD<!-- 시군구코드 -->
+            ,A.BJD_CD<!-- 법정동코드 -->
+            ,NVL(A.REPR_GB_CD, '0') AS REPR_GB_CD<!-- 대지구분코드 -->
+            ,A.BUN<!-- 번 -->
+            ,A.JI<!-- 지 -->
+            ,A.SPLOT_NM<!-- 특수지명 -->
+            ,A.BLOCK<!-- 블록 -->
+            ,A.LOT<!-- 로트 -->
+            ,A.BYLOT_CNT<!-- 외필지수 -->
+            ,A.RGN_CD<!-- 지역코드 -->
+            ,A.JIGU_CD<!-- 지구코드 -->
+            ,A.ZONE_CD<!-- 구역코드 -->
+            ,A.RGN_NM<!-- 지역명 -->
+            ,A.JIGU_NM<!-- 지구명 -->
+            ,A.ZONE_NM<!-- 구역명 -->
+            ,B.DONG_NM<!-- 동명 -->
+            ,B.MAIN_ATCH_GB_CD<!-- 주부속구분코드 -->
+            ,B.MAIN_ATCH_GB_NM<!-- 주부속구분명 -->
+            ,B.PLAT_AREA<!-- 대지면적 -->
+            ,B.ARCH_AREA<!-- 건축면적 -->
+            ,B.BC_RAT<!-- 건폐율 -->
+            ,B.TOTAREA<!-- 연면적 -->
+            ,B.VL_RAT_ESTM_TOTAREA<!-- 용적률산정연면적 -->
+            ,B.VL_RAT<!-- 용적률 -->
+            ,B.STRCT_CD<!-- 구조코드 -->
+            ,B.STRCT_NM<!-- 구조명 -->
+            ,B.ETC_STRCT<!-- 기타구조 -->
+            ,B.MAIN_PURPS_CD<!-- 주용도코드 -->
+            ,B.MAIN_PURPS_NM<!-- 주용도명 -->
+            ,B.ETC_PURPS<!-- 기타용도 -->
+            ,B.ROOF_CD<!-- 지붕코드 -->
+            ,B.ROOF_NM<!-- 지붕명 -->
+            ,B.ETC_ROOF<!-- 기타지붕 -->
+            ,B.HHLD_CNT<!-- 세대수 -->
+            ,B.FMLY_CNT<!-- 가구수 -->
+            ,B.HEIT<!-- 높이 -->
+            ,B.GRND_FLR_CNT<!-- 지상층수 -->
+            ,B.UGRND_FLR_CNT<!-- 지하층수 -->
+            ,B.RIDE_USE_ELVT_CNT<!-- 승용승강기수 -->
+            ,B.EMGEN_USE_ELVT_CNT<!-- 비상용승강기수 -->
+            ,B.ATCH_BLD_CNT<!-- 부속건축물수 -->
+            ,B.ATCH_BLD_AREA<!-- 부속건축물면적 -->
+            ,B.TOT_DONG_TOTAREA<!-- 총동연면적 -->
+            ,B.INDR_MECH_UTCNT<!-- 옥내기계식대수 -->
+            ,B.INDR_MECH_AREA<!-- 옥내기계식면적 -->
+            ,B.OUDR_MECH_UTCNT<!-- 옥외기계식대수 -->
+            ,B.OUDR_MECH_AREA<!-- 옥외기계식면적 -->
+            ,B.INDR_AUTO_UTCNT<!-- 옥내자주식대수 -->
+            ,B.INDR_AUTO_AREA<!-- 옥내자주식면적 -->
+            ,B.OUDR_AUTO_UTCNT<!-- 옥외자주식대수 -->
+            ,B.OUDR_AUTO_AREA<!-- 옥외자주식면적 -->
+            ,B.PMSNO_YMD<!-- 허가일 -->
+            ,B.STCNS_DAY<!-- 착공일 -->
+            ,B.USEAPR_DAY<!-- 사용승인일 -->
+            ,B.HO_CNT<!-- 호수 -->
+            ,B.ENGY_EFF_GRADE<!-- 에너지효율등급 -->
+            ,B.ENGY_RDC_RATE<!-- 에너지절감율 -->
+            ,B.ENGY_EPI_SCORE<!-- 에너지EPI점수 -->
+            ,B.ENV_BLDG_GRADE<!-- 친환경건축물등급 -->
+            ,B.ENV_BLDG_SOCRE<!-- 친환경건축물인증점수 -->
+            ,B.INTL_BLDG_GRADE<!-- 지능형건축물등급 -->
+            ,B.INTL_BLDG_SOCRE<!-- 지능형건축물인증점수 -->
+            ,B.ERS_YN<!-- 내진설계적용여부 -->
+            ,B.ERS_CAPA<!-- 내진능력 -->
+            ,CASE WHEN B.PMSNO_YEAR IS NOT NULL
+                  THEN B.PMSNO_YEAR||'-'||B.PMSNO_KIK_NM||'-'||PMSNO_GB_NM
+                  ELSE NULL END AS PMSRGST_INFO<!--허가번호: SEQ가 없음-->
+        FROM DJRBLDRGST A
+        INNER JOIN DJRTITLE B ON A.BLDRGST_PK = B.BLDRGST_PK
+        WHERE A.BLDRGST_PK = #{bldrgstPk}
+            AND ROWNUM = 1
+    </select>
+
+    <!-- 층별현황 -->
+    <select id="getFloor" parameterType="string" resultType="defaultMap">
+        SELECT
+            DISTINCT
+            A.BLDRGST_PK
+            ,A.SGG_CD<!-- 시군구코드 -->
+            ,A.BJD_CD<!-- 법정동코드 -->
+            ,NVL(A.REPR_GB_CD, '0') AS REPR_GB_CD<!-- 대지구분코드 -->
+            ,A.BUN<!-- 번 -->
+            ,A.JI<!-- 지 -->
+            ,B.DONG_NM<!-- 동명 -->
+            ,B.FLR_GB_CD<!-- 층구분코드 -->
+            ,B.FLR_GB_NM<!-- 층구분명 -->
+            ,B.FLR_NO<!-- 층번호 -->
+            ,B.FLR_NO_NM<!-- 층번호명 -->
+            ,B.STRCT_CD<!-- 구조코드 -->
+            ,B.STRCT_NM<!-- 구조명 -->
+            ,B.ETC_STRCT<!-- 기타구조 -->
+            ,B.MAIN_PURPS_CD<!-- 주용도코드 -->
+            ,B.MAIN_PURPS_NM<!-- 주용도명 -->
+            ,B.ETC_PURPS<!-- 기타용도 -->
+            ,B.PAREA<!-- 면적 -->
+            ,B.MAIN_ATCH_GB_CD<!-- 주부속구분코드 -->
+            ,B.MAIN_ATCH_GB_NM<!-- 주부속구분명 -->
+            ,B.AREA_EXCT_YN<!-- 면적제외여부 -->
+        FROM DJRBLDRGST A
+        INNER JOIN DJRFLROULN B on A.BLDRGST_PK = B.BLDRGST_PK
+        WHERE A.BLDRGST_PK = #{bldrgstPk}
+        ORDER BY B.FLR_GB_CD, B.FLR_NO, B.MAIN_PURPS_CD
+    </select>
+
+    <!-- 전유부 -->
+    <select id="getExposByPnu" parameterType="string" resultType="defaultMap">
+        SELECT
+            DISTINCT
+            A.BLDRGST_PK <!-- 관리건축물대장PK -->
+            ,C.BLD_NM <!-- 건물명 -->
+            ,A.DONG_NM <!-- 동명 -->
+            ,A.HO_NM <!-- 호명 -->
+            ,A.FLR_GB_CD <!-- 층구분코드 -->
+            ,A.FLR_GB_NM <!-- 층구분명 -->
+            ,A.FLR_NO <!-- 층번호 -->
+            ,A.FLR_GB_NM || ' ' || A.FLR_NO || '층' AS FLR_NM
+            ,B.EXPOS_PUBUSE_GB_CD
+            ,B.EXPOS_PUBUSE_GB_NM<!-- 전유공용구분명 -->
+            ,B.FLR_NO_NM<!-- 층번호명 -->
+            ,B.STRCT_CD
+            ,B.STRCT_NM<!-- 구조명 -->
+            ,B.MAIN_PURPS_CD
+            ,B.MAIN_PURPS_NM<!-- 주용도명 -->
+            ,B.ETC_PURPS<!-- 기타용도 -->
+            ,B.PAREA<!-- 면적 -->
+            ,(SELECT SUM(PAREA) FROM DJREPOSPUBUSEAREA WHERE BLDRGST_PK = A.BLDRGST_PK AND NOT B.EXPOS_PUBUSE_GB_CD = '1') AS SHARE_AREA
+        FROM DJREXPOS A, DJREPOSPUBUSEAREA B, DJRBLDRGST C
+        WHERE
+            A.BLDRGST_PK IN (
+                SELECT BLDRGST_PK
+                FROM DJRBLDRGST
+                WHERE
+                    A.SGG_CD = SUBSTR(#{pnu}, 1, 5)
+                    AND A.BJD_CD = SUBSTR(#{pnu}, 6, 5)
+                    AND NVL(A.REPR_GB_CD, '0') = DECODE(SUBSTR(#{pnu}, 11, 1), '1', '0', '2', '1')
+                    AND A.BUN = SUBSTR(#{pnu}, 12, 4)
+                    AND A.JI = SUBSTR(#{pnu}, 16, 4)
+                    AND A.REGSTR_KIND_CD = '4')
+        AND A.BLDRGST_PK = B.BLDRGST_PK
+        AND B.BLDRGST_PK = C.BLDRGST_PK
+        AND B.EXPOS_PUBUSE_GB_CD = '1'
+        ORDER BY C.BLD_NM, A.DONG_NM, A.FLR_GB_CD, A.FLR_NO, A.HO_NM
+    </select>
+    <select id="getExposByPk" parameterType="string" resultType="defaultMap">
+        SELECT
+            DISTINCT
+            A.BLDRGST_PK <!-- 관리건축물대장PK -->
+            ,C.BLD_NM <!-- 건물명 -->
+            ,A.DONG_NM <!-- 동명 -->
+            ,A.HO_NM <!-- 호명 -->
+            ,A.FLR_GB_CD <!-- 층구분코드 -->
+            ,A.FLR_GB_NM <!-- 층구분명 -->
+            ,A.FLR_NO <!-- 층번호 -->
+            ,A.FLR_GB_NM || ' ' || A.FLR_NO || '층' AS FLR_NM
+            ,B.EXPOS_PUBUSE_GB_CD
+            ,B.EXPOS_PUBUSE_GB_NM<!-- 전유공용구분명 -->
+            ,B.FLR_NO_NM<!-- 층번호명 -->
+            ,B.STRCT_CD
+            ,B.STRCT_NM<!-- 구조명 -->
+            ,B.MAIN_PURPS_CD
+            ,B.MAIN_PURPS_NM<!-- 주용도명 -->
+            ,B.ETC_PURPS<!-- 기타용도 -->
+            ,B.PAREA<!-- 면적 -->
+            ,(SELECT SUM(PAREA) FROM DJREPOSPUBUSEAREA WHERE BLDRGST_PK = A.BLDRGST_PK AND NOT B.EXPOS_PUBUSE_GB_CD = '1') AS SHARE_AREA
+        FROM DJREXPOS A, DJREPOSPUBUSEAREA B, DJRBLDRGST C
+        WHERE
+            A.BLDRGST_PK = #{bldrgstPk}
+        AND A.BLDRGST_PK = B.BLDRGST_PK
+        AND B.BLDRGST_PK = C.BLDRGST_PK
+        AND B.EXPOS_PUBUSE_GB_CD = '1'
+    </select>
+
+    <!-- 부속지번현황 -->
+    <select id="getAttachedJibun" parameterType="string" resultType="defaultMap">
+        SELECT
+            DISTINCT
+            SGG_CD||BJD_CD||DECODE(NVL(REPR_GB_CD, '0'),'0','1','1','2')||LPAD(BUN,4,'0')||LPAD(JI,4,'0') PNU
+            ,REGSTR_GB_CD <!-- 대장구분코드 -->
+            ,REGSTR_GB_NM <!-- 대장구분명 -->
+            ,REGSTR_KIND_CD <!-- 대장종류코드 -->
+            ,REGSTR_KIND_NM <!-- 대장종류명 -->
+            ,SPLOT_NM <!-- 특수지명 -->
+            ,BLOCK <!-- 블록 -->
+            ,LOT <!-- 로트 -->
+            ,ATCH_REGSTR_GB_CD <!-- 부속대장구분코드 -->
+            ,ATCH_REGSTR_GB_NM <!-- 부속대장구분명 -->
+            ,ATCH_SGG_CD <!-- 부속시군구코드 -->
+            ,ATCH_BJD_CD <!-- 부속법정동코드 -->
+            ,ATCH_LAND_GB_CD <!-- 부속대지구분코드 -->
+            ,ATCH_BUN <!-- 부속번 -->
+            ,ATCH_JIBUN <!-- 부속지 -->
+            ,ATCH_SPC_JIBUN <!-- 부속특수지명 -->
+            ,ATCH_BLOCK <!-- 부속블록 -->
+            ,ATCH_LOT <!-- 부속로트 -->
+            ,ATCH_ETC_JIBUN <!-- 부속기타지번명 -->
+        FROM DJRATCHJIBUN
+        WHERE BLDRGST_PK = #{bldrgstPk}
+    </select>
+
+    <!-- 오수정화시설 -->
+    <select id="getWclf" parameterType="string" resultType="defaultMap">
+        SELECT
+           DISTINCT
+            SGG_CD||BJD_CD||DECODE(NVL(REPR_GB_CD, '0'),'0','1','1','2')||LPAD(BUN,4,'0')||LPAD(JI,4,'0') PNU
+            ,MODE_CD <!-- 형식코드 -->
+            ,MODE_NM <!-- 형식명 -->
+            ,ETC_MODE <!-- 기타형식 -->
+            ,UNIT_GB_CD <!-- 단위구분코드 -->
+            ,UNIT_GB_NM <!-- 단위구분명 -->
+            ,CAPA_PSPER <!-- 용량인용 -->
+            ,CAPA_LUBE <!-- 용량루베 -->
+        FROM DJRWCLF
+        WHERE BLDRGST_PK = #{bldrgstPk}
+    </select>
+
+    <!-- 지역지구구역현황 -->
+    <select id="getJijigu" parameterType="string" resultType="defaultMap">
+        SELECT
+            DISTINCT
+            JIJIGU_GB_CD <!-- 지역지구구역구분코드 -->
+            ,JIJIGU_GB_NM <!-- 지역지구구역구분명 -->
+            ,JIJIGU_CD <!-- 지역지구구역코드 -->
+            ,JIJIGU_NM <!-- 지역지구구역명 -->
+            ,REPR_YN <!-- 대표여부 -->
+            ,ETC_JIJIGU <!-- 기타지역지구구역 -->
+        FROM DJRJIJIGU
+        WHERE BLDRGST_PK = #{bldrgstPk}
+    </select>
+
+    <!-- 소유자구분현황 TODO 세움터뷰-테이블정의서 비교 필요 -->
+    <select id="getOwner" parameterType="string" resultType="defaultMap">
+        SELECT
+           DISTINCT
+           B.BLDRGST_PK
+            ,A.SGG_CD || A.BJD_CD || DECODE(NVL(A.REPR_GB_CD, '0'),'0','1','1','2') || LPAD(A.BUN,4,'0') || LPAD(A.JI,4,'0') AS PNU
+            ,B.OWN_GBN_CD <!-- 소유구분코드 -->
+            ,B.OWN_GBN_NM <!-- 소유구분명 -->
+            ,B.CHANG_CAUS_DAY <!-- 변동원인일 -->
+        FROM DJRBLDRGST A
+        INNER JOIN DJROWNR B ON A.BLDRGST_PK = B.BLDRGST_PK
+        WHERE A.BLDRGST_PK = #{bldrgstPk}
+    </select>
+
+    <!-- 주택가격 -->
+    <select id="getHousePrice" parameterType="string" resultType="defaultMap">
+        SELECT
+           DISTINCT
+            BASE_YMD <!-- 기준일자 -->
+            ,POTVALE <!-- 주택가격 -->
+        FROM DJRPRICE
+        WHERE BLDRGST_PK = #{bldrgstPk}
+        ORDER BY BASE_YMD DESC
+    </select>
+
+</mapper>

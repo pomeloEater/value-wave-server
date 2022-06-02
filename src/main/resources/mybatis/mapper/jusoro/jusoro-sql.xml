@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.vng.valuewave.web.jusoro.JusoroMapper">
+
+    <!-- DB 연결 확인 -->
+    <select id="checkConnection" resultType="defaultMap">
+        SELECT * FROM DUAL
+    </select>
+
+    <select id="searchByPnuCode" parameterType="juso" resultType="jusoroEntrc">
+        SELECT
+            SGG_CD
+            ,ENT_CD
+            ,BJD_CD
+            ,SI_NM
+            ,SGG_NM
+            ,EMD_NM
+            ,RN_MGT_SN
+            ,RN
+            ,UDRT_YN
+            ,BULD_MNNM
+            ,BULD_SLNO
+            ,BD_NM
+            ,ZIP_NO
+            ,BULD_USE_TY
+            ,BULD_GR_YN
+            ,HEMD_NM
+            ,ENT_X
+            ,ENT_Y
+        FROM LNT_ENTRC_KA
+        WHERE
+        <foreach collection="list" separator="OR" item="juso">
+            (
+                RN_MGT_SN = #{juso.rdMgtSn} /*도로명코드*/
+                AND UDRT_YN = #{juso.udrtYn}/*지하여부*/
+                AND BULD_MNNM = #{juso.buldMnnm}/*건물본번*/
+                AND BULD_SLNO = #{juso.buldSlno}/*건물부번*/
+            )
+        </foreach>
+    </select>
+</mapper>
