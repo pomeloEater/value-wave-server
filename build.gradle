@@ -88,3 +88,7 @@ tasks.named('assembleFrontend') {
 clean.doFirst {
     delete "${projectDir}/src/main/resources/static/"
 }
+
+jar {
+    enabled = false
+}
